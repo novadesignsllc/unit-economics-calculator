@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit Economics Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #181818;
+    --surface2: #222222;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0ede8;
+    --muted: #888580;
+    --faint: #444;
+    --green: #4ade9a;
+    --green-dim: rgba(74,222,154,0.12);
+    --amber: #f5a623;
+    --amber-dim: rgba(245,166,35,0.12);
+    --red: #f05a5a;
+    --red-dim: rgba(240,90,90,0.12);
+    --accent: #4ade9a;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .header-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: var(--mono);
+    letter-spacing: 0.04em;
+  }
+
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  .page-title {
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+    color: var(--text);
+  }
+
+  .page-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  @media (max-width: 800px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .panel-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .slider-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.4rem;
+  }
+
+  .slider-name {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .slider-value {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 2px;
+    background: var(--faint);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+
+  input[type=range]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 2px solid var(--bg);
+  }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+
+  .right-col { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 700px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .kpi {
+    background: var(--surface);
+    padding: 1.1rem 1.25rem;
+  }
+
+  .kpi-label {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .kpi-val {
+    font-size: 22px;
+    font-weight: 500;
+    font-family: var(--mono);
+    letter-spacing: -0.02em;
+  }
+
+  .wf-sep { margin-top: 14px; }
+
+  .wf-amt-net {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: var(--green) !important;
+  }
+
+  .kpi-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .g { color: var(--green); }
+  .a { color: var(--amber); }
+  .r { color: var(--red); }
+
+  .waterfall-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+
+  .wf-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .wf-label {
+    width: 175px;
+    flex-shrink: 0;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .wf-label.bold {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .wf-track {
+    flex: 1;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .wf-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  .wf-amt {
+    width: 62px;
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .verdict {
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    font-size: 13px;
+    line-height: 1.6;
+    border: 1px solid transparent;
+  }
+
+  .verdict.ok { background: var(--green-dim); border-color: rgba(74,222,154,0.2); color: #a8f0cc; }
+  .verdict.warn { background: var(--amber-dim); border-color: rgba(245,166,35,0.2); color: #f5c97a; }
+  .verdict.bad { background: var(--red-dim); border-color: rgba(240,90,90,0.2); color: #f5a0a0; }
+
+  .verdict strong { font-weight: 600; }
+
+  .monthly-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  @media (max-width: 700px) {
+    .monthly-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .monthly-kpi {
+    background: var(--surface);
+    padding: 1rem 1.25rem;
+  }
+
+  .monthly-kpi .kpi-label { font-size: 11px; font-family: var(--mono); color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 0.35rem; }
+  .monthly-kpi .kpi-val { font-size: 20px; font-weight: 500; font-family: var(--mono); }
+
+  .refund-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .refund-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0.3rem 0.5rem;
+    width: 62px;
+    text-align: right;
+    outline: none;
+  }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+  input[type=number]:focus { border-color: var(--accent); }
+
+  .pct-symbol {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .save-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .company-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 0.35rem 0.6rem;
+    outline: none;
+    min-width: 0;
+  }
+
+  .company-input::placeholder { color: var(--faint); }
+  .company-input:focus { border-color: var(--accent); }
+
+  .save-btn {
+    background: var(--green-dim);
+    border: 1px solid rgba(74,222,154,0.3);
+    border-radius: 6px;
+    color: var(--green);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 0.35rem 0.75rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .save-btn:hover { background: rgba(74,222,154,0.22); }
+
+  .db-section { padding: 2rem 2rem 4rem; }
+
+  .db-section .panel-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .db-table-wrap {
+    overflow-x: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .db-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-family: var(--mono);
+    white-space: nowrap;
+  }
+
+  .db-table th {
+    text-align: left;
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .db-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .db-table th.sortable:hover { color: var(--text); }
+  .db-table th.sort-asc::after { content: ' ▲'; }
+  .db-table th.sort-desc::after { content: ' ▼'; }
+
+  .db-table td {
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  .db-table tr:last-child td { border-bottom: none; }
+  .db-table tr:hover td { background: var(--surface2); }
+
+  .db-table .db-name {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .db-table .out { color: var(--text); font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+  .db-table .out-net { color: var(--green); font-size: 17px; font-weight: 600; letter-spacing: -0.01em; }
+
+  .db-table th.out-header { border-left: 1px solid var(--border2); color: var(--text); }
+  .db-table td.out { border-left: 1px solid var(--border); }
+
+  .db-table tr.active-row td { background: rgba(74,222,154,0.04); }
+
+  .pc-total { cursor: pointer; user-select: none; }
+  .pc-total:hover { color: var(--text); }
+  .pc-breakdown { margin-top: 5px; font-size: 10px; color: var(--faint); line-height: 1.9; }
+
+  .update-btn {
+    background: rgba(74,222,154,0.15);
+    border: 1px solid rgba(74,222,154,0.4);
+    border-radius: 6px;
+    color: var(--green);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 0.35rem 0.75rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .update-btn:hover { background: rgba(74,222,154,0.25); }
+
+
+  .del-btn {
+    background: none;
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 13px;
+    padding: 1px 7px;
+    line-height: 1.5;
+  }
+
+  .del-btn:hover { background: var(--red-dim); border-color: var(--red); color: var(--red); }
+
+  .load-btn {
+    background: none;
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+
+  .load-btn:hover { background: var(--green-dim); border-color: rgba(74,222,154,0.3); color: var(--green); }
+
+  .oq-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .panel.editing {
+    border-color: rgba(245,166,35,0.45);
+    box-shadow: 0 0 0 1px rgba(245,166,35,0.12);
+  }
+
+  .edit-banner {
+    display: none;
+    background: var(--amber-dim);
+    border: 1px solid rgba(245,166,35,0.3);
+    border-radius: 8px;
+    padding: 0.6rem 0.9rem;
+    margin-bottom: 1.25rem;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .edit-banner.visible { display: flex; }
+
+  .edit-banner-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--amber);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+
+  .edit-banner-name {
+    font-size: 13px;
+    font-family: var(--sans);
+    font-weight: 500;
+    color: var(--amber);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .cancel-btn {
+    background: none;
+    border: 1px solid rgba(245,166,35,0.35);
+    border-radius: 4px;
+    color: var(--amber);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 2px 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+
+  .cancel-btn:hover { opacity: 1; background: var(--amber-dim); }
+
+  .notes-textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 0.4rem 0.6rem;
+    outline: none;
+    resize: vertical;
+    min-height: 52px;
+    line-height: 1.5;
+    margin-top: 0.75rem;
+  }
+
+  .notes-textarea::placeholder { color: var(--faint); }
+  .notes-textarea:focus { border-color: var(--accent); }
+
+  .db-notes {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* Firebase status indicator */
+  .fb-status {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--faint);
+    margin-left: 8px;
+    letter-spacing: 0.03em;
+  }
+  .fb-status.connected { color: var(--green); opacity: 0.7; }
+  .fb-status.error { color: var(--red); }
+
+  /* ── Card layout ──────────────────────────────────────── */
+  .db-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .db-sort-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-right: 2px;
+    flex-shrink: 0;
+  }
+  .sort-pill {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 11px;
+    white-space: nowrap;
+  }
+  .sort-pill:hover { color: var(--text); border-color: var(--border2); }
+  .sort-pill.active-sort { background: var(--green-dim); border-color: rgba(74,222,154,0.3); color: var(--green); }
+
+  .entry-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+    gap: 1rem;
+  }
+  @media (max-width: 560px) { .entry-cards { grid-template-columns: 1fr; } }
+
+  .entry-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .entry-card.active-card {
+    border-color: rgba(74,222,154,0.4);
+    box-shadow: 0 0 0 1px rgba(74,222,154,0.08);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0.85rem 1rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-name { font-size: 14px; font-weight: 500; color: var(--text); }
+  .card-note { font-size: 11px; color: var(--muted); font-style: italic; margin-top: 2px; }
+  .card-actions { display: flex; gap: 6px; flex-shrink: 0; margin-top: 1px; }
+
+  .card-outputs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .card-kpi { background: var(--surface); padding: 0.65rem 0.8rem; }
+  .card-kpi.clickable { cursor: pointer; }
+  .card-kpi.clickable:hover { background: var(--surface2); }
+  .card-kpi-label {
+    font-size: 9px;
+    font-family: var(--mono);
+    color: var(--faint);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    white-space: nowrap;
+  }
+  .card-kpi-val {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .card-inputs {
+    padding: 0.55rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 14px;
+  }
+  .card-chip { font-size: 11px; font-family: var(--mono); color: var(--faint); }
+  .card-chip b { color: var(--muted); font-weight: 400; }
+
+  /* ── View toggle ──────────────────────────────────────── */
+  .export-btn { background: none; border: 1px solid var(--border2); border-radius: 6px; color: var(--muted); cursor: pointer; font-family: var(--mono); font-size: 11px; padding: 3px 11px; white-space: nowrap; flex-shrink: 0; }
+  .export-btn:hover { background: var(--green-dim); border-color: rgba(74,222,154,0.3); color: var(--green); }
+
+  /* ── Bulk edit bar ────────────────────────────────────── */
+  .bulk-bar { display: flex; align-items: center; gap: 10px; background: rgba(74,222,154,0.07); border: 1px solid rgba(74,222,154,0.2); border-radius: 8px; padding: 0.6rem 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .bulk-count { font-size: 12px; font-family: var(--mono); color: var(--green); font-weight: 500; flex-shrink: 0; }
+  .bulk-label { font-size: 11px; color: var(--muted); font-family: var(--mono); flex-shrink: 0; }
+  .bulk-select { background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; color: var(--text); font-family: var(--mono); font-size: 12px; padding: 0.28rem 0.5rem; outline: none; cursor: pointer; }
+  .bulk-select:focus { border-color: var(--accent); }
+  .bulk-input { -moz-appearance: textfield; appearance: textfield; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; color: var(--text); font-family: var(--mono); font-size: 12px; padding: 0.28rem 0.5rem; width: 90px; text-align: right; outline: none; }
+  .bulk-input::-webkit-inner-spin-button, .bulk-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .bulk-input:focus { border-color: var(--accent); }
+  .bulk-apply { background: var(--green-dim); border: 1px solid rgba(74,222,154,0.35); border-radius: 6px; color: var(--green); cursor: pointer; font-family: var(--mono); font-size: 12px; padding: 0.28rem 0.75rem; white-space: nowrap; }
+  .bulk-apply:hover { background: rgba(74,222,154,0.22); }
+  .bulk-clear { background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); cursor: pointer; font-family: var(--mono); font-size: 12px; padding: 0.28rem 0.6rem; }
+  .bulk-clear:hover { color: var(--text); border-color: var(--border2); }
+  input[type=checkbox].bulk-chk { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border: 1px solid var(--border2); border-radius: 3px; background: var(--surface2); cursor: pointer; flex-shrink: 0; position: relative; vertical-align: middle; }
+  input[type=checkbox].bulk-chk:checked { background: var(--green); border-color: var(--green); }
+  input[type=checkbox].bulk-chk:checked::after { content: ''; position: absolute; left: 3px; top: 0px; width: 5px; height: 8px; border: 2px solid #0f0f0f; border-top: none; border-left: none; transform: rotate(45deg); }
+  .view-toggle { display: flex; gap: 4px; margin-left: auto; flex-shrink: 0; }
+  .view-btn { background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); cursor: pointer; font-family: var(--mono); font-size: 11px; padding: 3px 11px; }
+  .view-btn:hover { color: var(--text); border-color: var(--border2); }
+  .view-btn.active { background: var(--surface2); border-color: var(--border2); color: var(--text); }
+
+  /* ── Compare select button ────────────────────────────── */
+  .cmp-btn { background: none; border: 1px solid var(--border2); border-radius: 4px; color: var(--muted); cursor: pointer; font-family: var(--mono); font-size: 11px; padding: 2px 8px; white-space: nowrap; }
+  .cmp-btn:hover { border-color: rgba(74,222,154,0.35); color: var(--green); }
+  .cmp-btn.selected { background: var(--green-dim); border-color: rgba(74,222,154,0.4); color: var(--green); }
+  .entry-card.comparing { border-color: rgba(74,222,154,0.4); }
+
+  /* ── Compact table view ───────────────────────────────── */
+  .cv-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; }
+  .cv-table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: var(--mono); white-space: nowrap; }
+  .cv-table th { text-align: left; padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--border); color: var(--muted); font-weight: 400; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .cv-table td { padding: 0.55rem 0.85rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: middle; }
+  .cv-table tr:last-child td { border-bottom: none; }
+  .cv-table tbody tr.cv-data { cursor: pointer; }
+  .cv-table tbody tr.cv-data:hover td { background: var(--surface2); }
+  .cv-table tbody tr.cv-data.cv-expanded td { background: rgba(74,222,154,0.03); border-bottom: none; }
+  .cv-table tbody tr.cv-data.cv-active td { background: rgba(74,222,154,0.03); }
+  .cv-name { font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--text) !important; }
+  .cv-out { font-size: 13px; font-weight: 600; }
+  .expand-row > td { padding: 0 !important; border-bottom: 1px solid var(--border); }
+  .expand-panel { padding: 1.25rem 1.25rem 1.1rem; }
+  .expand-section-label { font-size: 9px; font-family: var(--mono); color: var(--faint); text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 1px solid var(--border); padding-bottom: 0.4rem; margin-bottom: 0.75rem; }
+  .expand-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.6rem 1.5rem; margin-bottom: 1.1rem; }
+  .expand-label { font-size: 9px; font-family: var(--mono); color: var(--faint); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .expand-val { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--text); }
+  .expand-notes { font-size: 12px; color: var(--muted); font-style: italic; font-family: var(--sans); line-height: 1.65; margin-top: 0.35rem; white-space: normal; }
+
+  /* ── Compare section ──────────────────────────────────── */
+  .compare-section { padding: 0 2rem 4rem; }
+  .cmp-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; }
+  .cmp-table { width: 100%; border-collapse: collapse; font-size: 12px; font-family: var(--mono); }
+  .cmp-table th { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border2); text-align: left; font-size: 14px; font-family: var(--sans); font-weight: 500; color: var(--text); }
+  .cmp-table th.cmp-row-header { font-size: 10px; font-family: var(--mono); font-weight: 400; color: var(--faint); letter-spacing: 0.06em; text-transform: uppercase; }
+  .cmp-table td { padding: 0.5rem 1rem; border-bottom: 1px solid var(--border); color: var(--muted); }
+  .cmp-table tr:last-child td { border-bottom: none; }
+  .cmp-table tr.cmp-group td { background: var(--surface2); font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); padding: 0.3rem 1rem; }
+  .cmp-table .cmp-row-label { color: var(--text); font-size: 12px; }
+  .cmp-best { color: var(--green) !important; font-weight: 600; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Unit Economics <span class="fb-status" id="fb-status">● connecting…</span></div>
+  <div class="header-label">Electrolyte Brand · Sale Price: <span id="header-price">$39.99</span></div>
+</header>
+
+<div class="main">
+  <h1 class="page-title">Per-unit P&L Calculator</h1>
+  <p class="page-sub">Adjust assumptions to find your target ingredient cost and net profit per unit.</p>
+
+  <div class="layout">
+
+    <div class="panel" id="assumptions-panel">
+      <div class="panel-title">Assumptions</div>
+
+      <div class="edit-banner" id="edit-banner">
+        <span class="edit-banner-label">Editing</span>
+        <span class="edit-banner-name" id="edit-banner-name"></span>
+        <button class="cancel-btn" onclick="newEntry()">✕ Cancel</button>
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">Sale price</span>
+          <span class="slider-value" id="sale-v">$39.99</span>
+        </div>
+        <input type="range" id="sale" min="9.99" max="99.99" value="39.99" step="1" oninput="update()">
+      </div>
+
+      <div class="refund-row">
+        <span class="slider-name">Refund rate</span>
+        <div class="refund-input-wrap">
+          <input type="number" id="refund" min="0" max="50" value="0" step="0.1" oninput="update()">
+          <span class="pct-symbol">%</span>
+        </div>
+      </div>
+
+      <div class="refund-row">
+        <span class="slider-name">Processing fee</span>
+        <div class="refund-input-wrap">
+          <input type="number" id="proc-fee" min="0" max="20" value="0" step="0.01" oninput="syncProcessingFee()">
+          <span class="pct-symbol">%</span>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">CAC</span>
+          <span class="slider-value" id="cac-v">$12</span>
+        </div>
+        <input type="range" id="cac" min="5" max="55" value="12" step="1" oninput="update()">
+      </div>
+
+      <div class="oq-row">
+        <span class="slider-name">Order qty (OQ)</span>
+        <div class="refund-input-wrap">
+          <input type="number" id="oq" min="1" value="500" step="1" oninput="syncOQ()" style="width:80px">
+          <span class="pct-symbol" style="font-size:12px;color:var(--muted)">units</span>
+        </div>
+      </div>
+
+      <div class="oq-row">
+        <span class="slider-name">Ingredient cost (PPU)</span>
+        <div class="refund-input-wrap">
+          <span class="pct-symbol">$</span>
+          <input type="number" id="ingr-input" min="0" value="8" step="0.1" oninput="syncPPU()" style="width:70px">
+        </div>
+      </div>
+
+      <div class="oq-row">
+        <span class="slider-name">Est. serving size</span>
+        <div class="refund-input-wrap">
+          <input type="number" id="serv-input" min="0" value="30" step="1" oninput="update()" style="width:62px">
+          <span class="pct-symbol" style="font-size:12px;color:var(--muted)">g</span>
+        </div>
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">Shipping</span>
+          <span class="slider-value" id="ship-v">$1.00</span>
+        </div>
+        <input type="range" id="ship" min="0" max="5" value="1" step="0.1" oninput="update()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">Bottle</span>
+          <span class="slider-value" id="bottle-v">$0.50</span>
+        </div>
+        <input type="range" id="bottle" min="0" max="3" value="0.50" step="0.1" oninput="update()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">Serving spoon</span>
+          <span class="slider-value" id="spoon-v">$0.20</span>
+        </div>
+        <input type="range" id="spoon" min="0" max="1" value="0.20" step="0.1" oninput="update()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">Label</span>
+          <span class="slider-value" id="label-v">$0.10</span>
+        </div>
+        <input type="range" id="label" min="0" max="1" value="0.10" step="0.1" oninput="update()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">Pick & pack (3PL)</span>
+          <span class="slider-value" id="pnp-v">$0.00</span>
+        </div>
+        <input type="range" id="pnp" min="0" max="10" value="0" step="0.1" oninput="update()">
+      </div>
+
+      <hr class="divider">
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-name">Monthly operating costs</span>
+          <span class="slider-value" id="opex-v">$50,000</span>
+        </div>
+        <input type="range" id="opex" min="100" max="100000" value="50000" step="100" oninput="update()">
+      </div>
+
+      <div class="save-row">
+        <input type="text" id="company-name" class="company-input" placeholder="Company name…" maxlength="60">
+        <button class="save-btn" id="save-btn" onclick="saveEntry()">+ Save entry</button>
+      </div>
+      <textarea id="entry-notes" class="notes-textarea" placeholder="Notes…" maxlength="500"></textarea>
+    </div>
+
+    <div class="right-col">
+
+      <div class="kpi-grid" id="kpis"></div>
+
+      <div class="waterfall-panel">
+        <div class="panel-title">Per-unit waterfall</div>
+        <div id="waterfall"></div>
+      </div>
+
+      <div class="monthly-grid" id="monthly" style="margin-top: 0.5rem;"></div>
+
+      <div id="verdict" class="verdict ok" style="margin-top: 0.5rem;"></div>
+
+    </div>
+  </div>
+
+
+</div>
+
+<div class="db-section" id="db-section" style="display:none"></div>
+<div class="compare-section" id="compare-section" style="display:none"></div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ── Firebase config ────────────────────────────────────────────────────────
+// Paste your config from Firebase Console > Project Settings > Your apps
+const firebaseConfig = {
+  apiKey:            "AIzaSyBsIblXL-jPAj6MugefYwwTQQiG98shHF0",
+  authDomain:        "calculator-ce3d1.firebaseapp.com",
+  projectId:         "calculator-ce3d1",
+  storageBucket:     "calculator-ce3d1.firebasestorage.app",
+  messagingSenderId: "850406087445",
+  appId:             "1:850406087445:web:e351608b3a8b892af9e71c"
+};
+
+firebase.initializeApp(firebaseConfig);
+const fsdb = firebase.firestore();
+const entriesCol = fsdb.collection('entries');
+
+let currentEntries = [];
+
+entriesCol.orderBy('savedAt', 'asc').onSnapshot(
+  snapshot => {
+    currentEntries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    renderDB(currentEntries);
+    const s = document.getElementById('fb-status');
+    s.textContent = '● live';
+    s.className = 'fb-status connected';
+  },
+  err => {
+    console.error('Firestore:', err);
+    const s = document.getElementById('fb-status');
+    s.textContent = '● offline';
+    s.className = 'fb-status error';
+  }
+);
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function fmt(n) {
+  return (n < 0 ? '-$' : '$') + Math.abs(n).toFixed(2);
+}
+function fmtK(n) {
+  const abs = Math.abs(n);
+  const str = abs >= 1000 ? (abs / 1000).toFixed(1) + 'K' : abs.toFixed(0);
+  return (n < 0 ? '-$' : '$') + str;
+}
+function pct(n) { return n.toFixed(1) + '%'; }
+function cc(n) { return n >= 5 ? 'g' : n >= 0 ? 'a' : 'r'; }
+function dv(n, fn) { return n === 0 ? '—' : fn(n); }
+
+// ── Calculator ─────────────────────────────────────────────────────────────
+function update() {
+  const sale       = +document.getElementById('sale').value;
+  const refundRate = +document.getElementById('refund').value || 0;
+  const cac        = +document.getElementById('cac').value;
+  const ingr       = +document.getElementById('ingr-input').value || 0;
+  const ship       = +document.getElementById('ship').value;
+  const bottle     = +document.getElementById('bottle').value;
+  const spoon      = +document.getElementById('spoon').value;
+  const label      = +document.getElementById('label').value;
+  const pnp        = +document.getElementById('pnp').value;
+  const units      = +document.getElementById('oq').value || 1;
+  const opex       = +document.getElementById('opex').value;
+  const servG      = +document.getElementById('serv-input').value || 0;
+
+  document.getElementById('sale-v').textContent   = '$' + sale.toFixed(2);
+  document.getElementById('header-price').textContent = '$' + sale.toFixed(2);
+  document.getElementById('cac-v').textContent    = '$' + cac;
+  document.getElementById('ship-v').textContent   = '$' + ship.toFixed(2);
+  document.getElementById('bottle-v').textContent = '$' + bottle.toFixed(2);
+  document.getElementById('spoon-v').textContent  = '$' + spoon.toFixed(2);
+  document.getElementById('label-v').textContent  = '$' + label.toFixed(2);
+  document.getElementById('pnp-v').textContent    = '$' + pnp.toFixed(2);
+  document.getElementById('opex-v').textContent   = '$' + opex.toLocaleString();
+
+  const returnAmt        = sale * (refundRate / 100);
+  const effectiveSale    = sale - returnAmt;
+  const processingFeeAmt = effectiveSale * (processingFeePct / 100);
+  const packagingPerUnit = ship + bottle + spoon + label + pnp;
+  const cogs             = ingr + packagingPerUnit;
+  const grossProfit      = effectiveSale - processingFeeAmt - cogs;
+  const grossPct         = grossProfit / sale * 100;
+  const contribM         = grossProfit - cac;
+  const contribPct       = contribM / sale * 100;
+  const opexPerUnit      = opex / units;
+  const netProfit        = contribM - opexPerUnit;
+  const netPct           = netProfit / sale * 100;
+  const monthlyNet       = netProfit * units;
+  const breakeven        = contribM > 0 ? Math.ceil(opex / contribM) : null;
+  const maxIngr          = effectiveSale - processingFeeAmt - cac - packagingPerUnit - opexPerUnit;
+  const productCostPPU   = ingr + bottle + spoon + label;
+  const totalInvestment  = (productCostPPU + ship + pnp) * units + opex;
+  const costPerGram      = servG > 0 ? cogs / servG : null;
+
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-label">Gross profit</div><div class="kpi-val ${cc(grossProfit)}">${fmt(grossProfit)}</div><div class="kpi-sub">${pct(grossPct)} margin</div></div>
+    <div class="kpi"><div class="kpi-label">Contrib. margin</div><div class="kpi-val ${cc(contribM)}">${fmt(contribM)}</div><div class="kpi-sub">${pct(contribPct)} of sale</div></div>
+    <div class="kpi"><div class="kpi-label">Opex / unit</div><div class="kpi-val a">${fmt(opexPerUnit)}</div><div class="kpi-sub">at ${units.toLocaleString()} units</div></div>
+    <div class="kpi"><div class="kpi-label">Net profit / unit</div><div class="kpi-val ${cc(netProfit)}">${fmt(netProfit)}</div><div class="kpi-sub">${costPerGram !== null ? '$' + costPerGram.toFixed(3) + '/g COGS' : pct(netPct) + ' of sale'}</div></div>
+  `;
+
+  const steps = [
+    { label: 'Sale price',                            amt:  sale,         pct: 1,                              color: '#4ade9a', bold: false },
+    { label: `— Returns (${refundRate.toFixed(1)}%)`,                          amt: -returnAmt,        pct: returnAmt / sale,        color: '#f05a5a', bold: false },
+    ...(processingFeePct > 0 ? [{ label: `— Processing fee (${processingFeePct.toFixed(2)}%)`, amt: -processingFeeAmt, pct: processingFeeAmt / sale, color: '#f5a623', bold: false }] : []),
+    { label: '— Ingredients',                                                   amt: -ingr,             pct: ingr / sale,             color: '#f05a5a', bold: false },
+    { label: '— Shipping',                            amt: -ship,         pct: ship / sale,                    color: '#f07070', bold: false },
+    { label: '— Bottle',                              amt: -bottle,       pct: bottle / sale,                  color: '#f07070', bold: false },
+    { label: '— Serving spoon',                       amt: -spoon,        pct: spoon / sale,                   color: '#f07070', bold: false },
+    { label: '— Label',                               amt: -label,        pct: label / sale,                   color: '#f07070', bold: false },
+    { label: '— Pick & pack',                         amt: -pnp,          pct: pnp / sale,                     color: '#f07070', bold: false },
+    { label: `Gross profit (${pct(grossPct)})`,       amt:  grossProfit,  pct: Math.max(grossProfit,0)/sale,   color: '#4ade9a', bold: true,  sep: true },
+    { label: '— CAC',                                 amt: -cac,          pct: cac / sale,                     color: '#f05a5a', bold: false },
+    { label: `Contrib. margin (${pct(contribPct)})`,  amt:  contribM,     pct: Math.max(contribM,0)/sale,      color: '#4ade9a', bold: true,  sep: true },
+    { label: '— Opex / unit',                         amt: -opexPerUnit,  pct: opexPerUnit / sale,             color: '#f5a623', bold: false },
+    { label: `Net profit (${pct(netPct)})`,           amt:  netProfit,    pct: Math.max(netProfit,0)/sale,     color: netProfit >= 0 ? '#4ade9a' : '#f05a5a', bold: true,  sep: true, net: true },
+  ];
+
+  document.getElementById('waterfall').innerHTML = steps.map(s => `
+    <div class="wf-row${s.sep ? ' wf-sep' : ''}">
+      <div class="wf-label ${s.bold ? 'bold' : ''}">${s.label}</div>
+      <div class="wf-track"><div class="wf-bar" style="width:${Math.max(s.pct*100,0.5).toFixed(1)}%;background:${s.color};"></div></div>
+      <div class="wf-amt${s.net ? ' wf-amt-net' : ''}" style="color:${s.net ? '#4ade9a' : s.amt >= 0 ? '#f0ede8' : '#f05a5a'}">${fmt(s.amt)}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('monthly').innerHTML = `
+    <div class="monthly-kpi"><div class="kpi-label">Monthly net profit</div><div class="kpi-val ${cc(monthlyNet)}">${fmtK(monthlyNet)}</div></div>
+    <div class="monthly-kpi"><div class="kpi-label">Break-even units / mo</div><div class="kpi-val ${breakeven && units >= breakeven ? 'g' : 'a'}">${breakeven ? breakeven.toLocaleString() : 'N/A'}</div></div>
+    <div class="monthly-kpi"><div class="kpi-label">Total investment</div><div class="kpi-val a">${fmtK(totalInvestment)}</div><div class="kpi-sub">(prod cost + P&amp;L) × OQ + opex</div></div>
+  `;
+
+  const v = document.getElementById('verdict');
+  if (netProfit >= 5) {
+    v.className = 'verdict ok';
+    v.innerHTML = `<strong>Healthy</strong> — You're netting ${fmt(netProfit)} per unit (${pct(netPct)}). At ${units.toLocaleString()} units/mo that's <strong>${fmtK(monthlyNet)}/month</strong> after all costs including operating expenses. Max ingredient budget at this setup: <strong>${fmt(Math.max(maxIngr,0))}</strong>.`;
+  } else if (netProfit >= 0) {
+    v.className = 'verdict warn';
+    v.innerHTML = `<strong>Tight</strong> — Profitable but thin at ${fmt(netProfit)}/unit. You need <strong>${breakeven ? breakeven.toLocaleString() : '—'} units/mo</strong> to cover opex. To improve: reduce ingredients below ${fmt(Math.max(maxIngr,0))}, lower CAC, or grow volume.`;
+  } else {
+    v.className = 'verdict bad';
+    v.innerHTML = `<strong>Not viable yet</strong> — Losing ${fmt(Math.abs(netProfit))}/unit after all costs. To break even at current volume, ingredients must be under <strong>${fmt(Math.max(maxIngr,0))}</strong>. Or you need to sell <strong>${breakeven ? breakeven.toLocaleString() : '—'} units/mo</strong> to absorb the opex burden.`;
+  }
+}
+
+// ── OQ / PPU sync ──────────────────────────────────────────────────────────
+function syncOQ() {
+  update();
+}
+
+function syncPPU() {
+  update();
+}
+
+let processingFeePct = parseFloat(localStorage.getItem('processingFee') || '0');
+document.getElementById('proc-fee').value = processingFeePct;
+
+function syncProcessingFee() {
+  processingFeePct = +document.getElementById('proc-fee').value || 0;
+  localStorage.setItem('processingFee', processingFeePct);
+  update();
+  renderDB(currentEntries);
+}
+
+update();
+
+// ── Entries (Firestore) ────────────────────────────────────────────────────
+let activeEntryId = null;
+let sortCol = null;
+let sortDir = 'asc';
+let viewMode = 'cards';
+let expandedId = null;
+let selectedIds = [];
+let bulkSelected = new Set();
+
+function sortBy(col) {
+  if (sortCol === col) {
+    sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortCol = col;
+    sortDir = 'asc';
+  }
+  renderDB(currentEntries);
+}
+
+function getEntryVal(e, col) {
+  const productCost = e.ingr + e.bottle + e.spoon + e.label;
+  if (col === 'productCost') return productCost;
+  if (col === 'totalInvestment') {
+    return (productCost + (e.ship || 0) + (e.pnp || 0)) * e.units + e.opex;
+  }
+  return e[col];
+}
+
+function getSortedEntries(entries) {
+  if (!sortCol) return entries;
+  return [...entries].sort((a, b) => {
+    let av = getEntryVal(a, sortCol);
+    let bv = getEntryVal(b, sortCol);
+    if (av == null) av = sortCol === 'name' ? '' : 0;
+    if (bv == null) bv = sortCol === 'name' ? '' : 0;
+    if (typeof av === 'string') return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    return sortDir === 'asc' ? av - bv : bv - av;
+  });
+}
+
+function buildEntry(name) {
+  const sale         = +document.getElementById('sale').value;
+  const refund       = +document.getElementById('refund').value || 0;
+  const cac          = +document.getElementById('cac').value;
+  const ingr         = +document.getElementById('ingr-input').value;
+  const ship         = +document.getElementById('ship').value;
+  const bottle       = +document.getElementById('bottle').value;
+  const spoon        = +document.getElementById('spoon').value;
+  const label        = +document.getElementById('label').value;
+  const pnp          = +document.getElementById('pnp').value;
+  const units        = +document.getElementById('oq').value;
+  const opex         = +document.getElementById('opex').value;
+  const servingGrams = +document.getElementById('serv-input').value || 0;
+
+  const returnAmt      = sale * (refund / 100);
+  const effectiveSale  = sale - returnAmt;
+  const procFeeAmt     = effectiveSale * (processingFeePct / 100);
+  const packaging      = ship + bottle + spoon + label + pnp;
+  const grossProfit    = effectiveSale - procFeeAmt - ingr - packaging;
+  const contribM      = grossProfit - cac;
+  const opexPerUnit   = opex / units;
+  const netProfit     = contribM - opexPerUnit;
+  const monthlyNet    = netProfit * units;
+  const productCost   = ingr + bottle + spoon + label;
+  const totalInvestment = (productCost + ship + pnp) * units + opex;
+
+  const notes = document.getElementById('entry-notes').value.trim();
+  return { name, sale, refund, processingFee: processingFeePct, cac, ingr, ship, bottle, spoon, label, pnp, units, opex, servingGrams, grossProfit, contribM, netProfit, monthlyNet, totalInvestment, notes };
+}
+
+async function saveEntry() {
+  const name = document.getElementById('company-name').value.trim();
+  if (!name) { document.getElementById('company-name').focus(); return; }
+
+  if (activeEntryId) {
+    await entriesCol.doc(activeEntryId).update(buildEntry(name));
+    newEntry();
+    return;
+  }
+
+  const entry = buildEntry(name);
+  entry.savedAt = firebase.firestore.FieldValue.serverTimestamp();
+  await entriesCol.add(entry);
+  document.getElementById('company-name').value = '';
+}
+
+function newEntry() {
+  activeEntryId = null;
+  document.getElementById('company-name').value = '';
+  document.getElementById('entry-notes').value = '';
+  document.getElementById('save-btn').textContent = '+ Save entry';
+  document.getElementById('save-btn').className = 'save-btn';
+  document.getElementById('edit-banner').classList.remove('visible');
+  document.getElementById('assumptions-panel').classList.remove('editing');
+}
+
+function loadEntry(id) {
+  const e = currentEntries.find(x => x.id === id);
+  if (!e) return;
+
+  document.getElementById('sale').value        = e.sale;
+  document.getElementById('refund').value      = e.refund;
+  document.getElementById('cac').value         = e.cac;
+  document.getElementById('ingr-input').value  = e.ingr;
+  document.getElementById('ship').value        = e.ship;
+  document.getElementById('bottle').value      = e.bottle;
+  document.getElementById('spoon').value       = e.spoon;
+  document.getElementById('label').value       = e.label;
+  document.getElementById('pnp').value         = e.pnp;
+  document.getElementById('oq').value          = e.units;
+  document.getElementById('opex').value        = e.opex;
+  document.getElementById('serv-input').value  = e.servingGrams || 0;
+
+  activeEntryId = e.id;
+  document.getElementById('company-name').value = e.name;
+  document.getElementById('entry-notes').value = e.notes || '';
+  document.getElementById('save-btn').textContent = 'Save changes';
+  document.getElementById('save-btn').className = 'save-btn';
+  document.getElementById('edit-banner-name').textContent = e.name;
+  document.getElementById('edit-banner').classList.add('visible');
+  document.getElementById('assumptions-panel').classList.add('editing');
+
+  update();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function deleteEntry(id) {
+  if (activeEntryId === id) newEntry();
+  await entriesCol.doc(id).delete();
+}
+
+function toggleProductCost(id) {
+  const el = document.getElementById('pc-' + id);
+  const arrow = document.getElementById('pca-' + id);
+  if (!el) return;
+  const show = el.style.display === 'none';
+  el.style.display = show ? 'block' : 'none';
+  arrow.textContent = show ? '▴' : '▾';
+}
+
+function toggleTotalInv(id) {
+  const el = document.getElementById('ti-' + id);
+  if (!el) return;
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleView(mode) {
+  viewMode = mode;
+  expandedId = null;
+  renderDB(currentEntries);
+}
+
+function toggleExpand(id) {
+  expandedId = expandedId === id ? null : id;
+  renderDB(currentEntries);
+}
+
+function toggleSelect(id) {
+  const idx = selectedIds.indexOf(id);
+  if (idx >= 0) {
+    selectedIds.splice(idx, 1);
+  } else {
+    if (selectedIds.length >= 3) return;
+    selectedIds.push(id);
+  }
+  renderDB(currentEntries);
+  renderCompare();
+}
+
+function exportCSV() {
+  if (!currentEntries.length) return;
+
+  const headers = [
+    'Company Name',
+    'Saved Date',
+    'Notes',
+    // ── Inputs ──────────────────────────
+    'Sale Price ($)',
+    'Refund Rate (%)',
+    'CAC ($)',
+    'Ingredients PPU ($)',
+    'Bottle ($)',
+    'Serving Spoon ($)',
+    'Label ($)',
+    'Shipping ($)',
+    'Pick & Pack ($)',
+    'Order Qty (units)',
+    'Monthly Opex ($)',
+    'Serving Size (g)',
+    // ── Computed inputs ──────────────────
+    'Return Amount ($)',
+    'Effective Sale Price ($)',
+    'Product Cost PPU ($)',
+    'Packaging Cost PPU ($)',
+    'Total COGS PPU ($)',
+    'Opex Per Unit ($)',
+    'Max Ingredient Budget ($)',
+    // ── Outputs ──────────────────────────
+    'Gross Profit ($)',
+    'Gross Margin (%)',
+    'Contrib. Margin ($)',
+    'Contrib. Margin (%)',
+    'Net Profit Per Unit ($)',
+    'Net Margin (%)',
+    'Monthly Net Profit ($)',
+    'Total Investment ($)',
+    'Break-even Units Per Month',
+    'Cost Per Gram ($)',
+  ];
+
+  const rows = currentEntries.map(e => {
+    const refund        = e.refund || 0;
+    const ship          = e.ship  || 0;
+    const pnp           = e.pnp   || 0;
+    const servG         = e.servingGrams || 0;
+    const returnAmt     = e.sale * (refund / 100);
+    const effectiveSale = e.sale - returnAmt;
+    const productCost   = e.ingr + e.bottle + e.spoon + e.label;
+    const packaging     = ship + e.bottle + e.spoon + e.label + pnp;
+    const cogs          = e.ingr + ship + e.bottle + e.spoon + e.label + pnp;
+    const grossProfit   = effectiveSale - e.ingr - (ship + e.bottle + e.spoon + e.label + pnp);
+    const grossPct      = grossProfit / e.sale * 100;
+    const contribM      = grossProfit - e.cac;
+    const contribPct    = contribM / e.sale * 100;
+    const opexPerUnit   = e.opex / e.units;
+    const netProfit     = contribM - opexPerUnit;
+    const netPct        = netProfit / e.sale * 100;
+    const monthlyNet    = netProfit * e.units;
+    const totalInv      = (productCost + ship + pnp) * e.units + e.opex;
+    const breakeven     = contribM > 0 ? Math.ceil(e.opex / contribM) : '';
+    const maxIngr       = effectiveSale - e.cac - (ship + e.bottle + e.spoon + e.label + pnp) - opexPerUnit;
+    const costPerGram   = servG > 0 ? (cogs / servG) : '';
+    const savedAt       = e.savedAt ? new Date(e.savedAt.seconds * 1000).toLocaleDateString() : '';
+
+    return [
+      e.name,
+      savedAt,
+      e.notes || '',
+      e.sale.toFixed(2),
+      refund.toFixed(1),
+      e.cac,
+      e.ingr.toFixed(2),
+      e.bottle.toFixed(2),
+      e.spoon.toFixed(2),
+      e.label.toFixed(2),
+      ship.toFixed(2),
+      pnp.toFixed(2),
+      e.units,
+      e.opex,
+      servG || '',
+      returnAmt.toFixed(2),
+      effectiveSale.toFixed(2),
+      productCost.toFixed(2),
+      packaging.toFixed(2),
+      cogs.toFixed(2),
+      opexPerUnit.toFixed(2),
+      maxIngr.toFixed(2),
+      grossProfit.toFixed(2),
+      grossPct.toFixed(2),
+      contribM.toFixed(2),
+      contribPct.toFixed(2),
+      netProfit.toFixed(2),
+      netPct.toFixed(2),
+      monthlyNet.toFixed(2),
+      totalInv.toFixed(2),
+      breakeven,
+      costPerGram !== '' ? costPerGram.toFixed(4) : '',
+    ];
+  });
+
+  const esc = v => { const s = String(v); return (s.includes(',') || s.includes('"') || s.includes('\n')) ? `"${s.replace(/"/g, '""')}"` : s; };
+  const csv = [headers, ...rows].map(r => r.map(esc).join(',')).join('\n');
+  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([csv], {type:'text/csv'})), download: `unit-economics-${new Date().toISOString().slice(0,10)}.csv` });
+  a.click();
+}
+
+function toggleBulkSelect(id) {
+  if (bulkSelected.has(id)) bulkSelected.delete(id);
+  else bulkSelected.add(id);
+  renderDB(currentEntries);
+}
+
+function clearBulkSelect() {
+  bulkSelected.clear();
+  renderDB(currentEntries);
+}
+
+function selectAllBulk(checked) {
+  if (checked) currentEntries.forEach(e => bulkSelected.add(e.id));
+  else bulkSelected.clear();
+  renderDB(currentEntries);
+}
+
+async function applyBulkEdit() {
+  const field = document.getElementById('bulk-field').value;
+  const raw   = document.getElementById('bulk-value').value.trim();
+  if (!field || raw === '') return;
+  const val = parseFloat(raw);
+  if (isNaN(val)) return;
+
+  const ops = [...bulkSelected].map(id => {
+    const e = currentEntries.find(x => x.id === id);
+    if (!e) return null;
+    const u             = { ...e, [field]: val };
+    const returnAmt     = u.sale * ((u.refund || 0) / 100);
+    const effectiveSale = u.sale - returnAmt;
+    const fee           = u.processingFee != null ? u.processingFee : processingFeePct;
+    const procFeeAmt    = effectiveSale * (fee / 100);
+    const packaging     = (u.ship || 0) + u.bottle + u.spoon + u.label + (u.pnp || 0);
+    const grossProfit   = effectiveSale - procFeeAmt - u.ingr - packaging;
+    const contribM      = grossProfit - u.cac;
+    const opexPerUnit   = u.opex / u.units;
+    const netProfit     = contribM - opexPerUnit;
+    const monthlyNet    = netProfit * u.units;
+    const productCost   = u.ingr + u.bottle + u.spoon + u.label;
+    const totalInvestment = (productCost + (u.ship || 0) + (u.pnp || 0)) * u.units + u.opex;
+    return entriesCol.doc(id).update({ [field]: val, grossProfit, contribM, netProfit, monthlyNet, totalInvestment });
+  }).filter(Boolean);
+
+  await Promise.all(ops);
+  bulkSelected.clear();
+  renderDB(currentEntries);
+}
+
+function calcTotalInv(e) {
+  const pc = e.ingr + e.bottle + e.spoon + e.label;
+  return (pc + (e.ship || 0) + (e.pnp || 0)) * e.units + e.opex;
+}
+
+function computeDisplayVals(e) {
+  const returnAmt     = e.sale * ((e.refund || 0) / 100);
+  const effectiveSale = e.sale - returnAmt;
+  const fee           = e.processingFee != null ? e.processingFee : processingFeePct;
+  const procFeeAmt    = effectiveSale * (fee / 100);
+  const packaging     = (e.ship || 0) + e.bottle + e.spoon + e.label + (e.pnp || 0);
+  const grossProfit   = effectiveSale - procFeeAmt - e.ingr - packaging;
+  const contribM      = grossProfit - e.cac;
+  const opexPerUnit   = e.opex / e.units;
+  const netProfit     = contribM - opexPerUnit;
+  const monthlyNet    = netProfit * e.units;
+  return { grossProfit, contribM, netProfit, monthlyNet, procFeeAmt };
+}
+
+function renderDB(entries) {
+  const section = document.getElementById('db-section');
+  if (entries.length === 0) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+
+  const sortFields = [
+    { col: 'netProfit',       label: 'Net/unit' },
+    { col: 'monthlyNet',      label: 'Mo. net' },
+    { col: 'grossProfit',     label: 'Gross profit' },
+    { col: 'contribM',        label: 'Contrib.' },
+    { col: 'totalInvestment', label: 'Total inv.' },
+    { col: 'name',            label: 'Company' },
+    { col: 'sale',            label: 'Sale' },
+    { col: 'cac',             label: 'CAC' },
+    { col: 'units',           label: 'OQ' },
+    { col: 'opex',            label: 'Opex' },
+  ];
+
+  const sortBar = `<div class="db-controls">
+    <span class="db-sort-label">Sort</span>
+    ${sortFields.map(f => `<button class="sort-pill${sortCol === f.col ? ' active-sort' : ''}" onclick="sortBy('${f.col}')">${f.label}${sortCol === f.col ? (sortDir === 'asc' ? ' ▲' : ' ▼') : ''}</button>`).join('')}
+    <button class="export-btn" onclick="exportCSV()">↓ Export CSV</button>
+    <div class="view-toggle">
+      <button class="view-btn${viewMode === 'cards' ? ' active' : ''}" onclick="toggleView('cards')">Cards</button>
+      <button class="view-btn${viewMode === 'table' ? ' active' : ''}" onclick="toggleView('table')">Table</button>
+    </div>
+  </div>`;
+
+  const sorted = getSortedEntries(entries);
+  const body = viewMode === 'table' ? renderTableView(sorted) : renderCardsView(sorted);
+
+  const bulkBar = bulkSelected.size > 0 ? `<div class="bulk-bar">
+    <span class="bulk-count">${bulkSelected.size} selected</span>
+    <span class="bulk-label">— set</span>
+    <select class="bulk-select" id="bulk-field">
+      <option value="">choose field…</option>
+      <option value="units">Order Qty / MOQ</option>
+      <option value="cac">CAC ($)</option>
+      <option value="opex">Monthly Opex ($)</option>
+      <option value="sale">Sale Price ($)</option>
+      <option value="refund">Refund Rate (%)</option>
+      <option value="processingFee">Processing Fee (%)</option>
+      <option value="ingr">Ingredients PPU ($)</option>
+      <option value="ship">Shipping ($)</option>
+      <option value="pnp">Pick &amp; Pack ($)</option>
+      <option value="bottle">Bottle ($)</option>
+      <option value="spoon">Serving Spoon ($)</option>
+      <option value="label">Label ($)</option>
+      <option value="servingGrams">Serving Size (g)</option>
+    </select>
+    <span class="bulk-label">to</span>
+    <input type="number" class="bulk-input" id="bulk-value" placeholder="new value" step="any">
+    <button class="bulk-apply" onclick="applyBulkEdit()">Apply to ${bulkSelected.size}</button>
+    <button class="bulk-clear" onclick="clearBulkSelect()">Clear</button>
+  </div>` : '';
+
+  section.innerHTML = `<div class="panel-title">Saved entries</div>${bulkBar}${sortBar}${body}`;
+}
+
+function renderCardsView(sorted) {
+  const cards = sorted.map(e => {
+    const productCost = e.ingr + e.bottle + e.spoon + e.label;
+    const totalInv    = calcTotalInv(e);
+    const servG       = e.servingGrams || 0;
+    const cogs        = e.ingr + (e.ship || 0) + e.bottle + e.spoon + e.label + (e.pnp || 0);
+    const costPerGram = servG > 0 ? cogs / servG : null;
+    const isActive    = e.id === activeEntryId;
+    const isSel       = selectedIds.includes(e.id);
+    const isBulk      = bulkSelected.has(e.id);
+    const { grossProfit, contribM, netProfit, monthlyNet } = computeDisplayVals(e);
+
+    const chips = [
+      `<span class="card-chip">Sale <b>$${e.sale.toFixed(2)}</b></span>`,
+      e.refund ? `<span class="card-chip">Refund <b>${e.refund.toFixed(1)}%</b></span>` : '',
+      `<span class="card-chip">CAC <b>$${e.cac}</b></span>`,
+      `<span class="card-chip">Ingr <b>${dv(e.ingr, n => '$' + n.toFixed(2))}</b></span>`,
+      `<span class="card-chip">Bottle <b>${dv(e.bottle, n => '$' + n.toFixed(2))}</b></span>`,
+      `<span class="card-chip">Spoon <b>${dv(e.spoon, n => '$' + n.toFixed(2))}</b></span>`,
+      `<span class="card-chip">Label <b>${dv(e.label, n => '$' + n.toFixed(2))}</b></span>`,
+      `<span class="card-chip">Ship <b>${dv(e.ship, n => '$' + n.toFixed(2))}</b></span>`,
+      e.pnp ? `<span class="card-chip">P&amp;P <b>$${e.pnp.toFixed(2)}</b></span>` : '',
+      `<span class="card-chip">OQ <b>${e.units.toLocaleString()}</b></span>`,
+      `<span class="card-chip">Opex <b>$${e.opex.toLocaleString()}/mo</b></span>`,
+      servG > 0 ? `<span class="card-chip">Serving <b>${servG}g${costPerGram !== null ? ' · $' + costPerGram.toFixed(3) + '/g' : ''}</b></span>` : '',
+    ].filter(Boolean).join('');
+
+    return `<div class="entry-card${isActive ? ' active-card' : ''}${isSel ? ' comparing' : ''}">
+      <div class="card-header">
+        <div>
+          <div class="card-name">${e.name}</div>
+          ${e.notes ? `<div class="card-note">${e.notes.slice(0, 90)}${e.notes.length > 90 ? '…' : ''}</div>` : ''}
+        </div>
+        <div class="card-actions">
+          <input type="checkbox" class="bulk-chk" ${isBulk ? 'checked' : ''} onchange="toggleBulkSelect('${e.id}')">
+          <button class="cmp-btn${isSel ? ' selected' : ''}" onclick="toggleSelect('${e.id}')">${isSel ? '✓ Comparing' : '+ Compare'}</button>
+          <button class="load-btn" data-action="load" data-id="${e.id}">Load</button>
+          <button class="del-btn" data-action="delete" data-id="${e.id}">×</button>
+        </div>
+      </div>
+      <div class="card-outputs">
+        <div class="card-kpi"><div class="card-kpi-label">Gross profit</div><div class="card-kpi-val ${cc(grossProfit)}">${fmt(grossProfit)}</div></div>
+        <div class="card-kpi"><div class="card-kpi-label">Contrib. margin</div><div class="card-kpi-val ${cc(contribM)}">${fmt(contribM)}</div></div>
+        <div class="card-kpi"><div class="card-kpi-label">Net / unit</div><div class="card-kpi-val ${cc(netProfit)}">${fmt(netProfit)}</div></div>
+        <div class="card-kpi"><div class="card-kpi-label">Monthly net</div><div class="card-kpi-val ${cc(monthlyNet)}">${fmtK(monthlyNet)}</div></div>
+        <div class="card-kpi clickable" onclick="toggleTotalInv('${e.id}')">
+          <div class="card-kpi-label">Total inv. ▾</div>
+          <div class="card-kpi-val a">${fmtK(totalInv)}</div>
+          <div id="ti-${e.id}" class="pc-breakdown" style="display:none">
+            ${fmt(productCost)} prod<br>+ ${dv(e.ship, n => '$' + n.toFixed(2))} ship<br>+ ${dv(e.pnp, n => '$' + n.toFixed(2))} P&amp;P<br>× ${e.units.toLocaleString()}<br>+ $${e.opex.toLocaleString()} opex
+          </div>
+        </div>
+      </div>
+      <div class="card-inputs">${chips}</div>
+    </div>`;
+  }).join('');
+  return `<div class="entry-cards">${cards}</div>`;
+}
+
+function renderTableView(sorted) {
+  const COLS = 9;
+  const rows = sorted.map(e => {
+    const productCost = e.ingr + e.bottle + e.spoon + e.label;
+    const totalInv    = calcTotalInv(e);
+    const servG       = e.servingGrams || 0;
+    const cogs        = e.ingr + (e.ship || 0) + e.bottle + e.spoon + e.label + (e.pnp || 0);
+    const costPerGram = servG > 0 ? cogs / servG : null;
+    const isActive    = e.id === activeEntryId;
+    const isSel       = selectedIds.includes(e.id);
+    const isExp       = expandedId === e.id;
+    const isBulk      = bulkSelected.has(e.id);
+    const { grossProfit, contribM, netProfit, monthlyNet, procFeeAmt } = computeDisplayVals(e);
+
+    const keyInputs = `$${e.sale.toFixed(2)} · CAC $${e.cac} · OQ ${e.units.toLocaleString()} · Opex $${e.opex >= 1000 ? (e.opex/1000).toFixed(0)+'K' : e.opex}`;
+
+    const detail = isExp ? `<tr class="expand-row"><td colspan="${COLS}"><div class="expand-panel">
+      <div class="expand-section-label">Outputs</div>
+      <div class="expand-grid">
+        <div><div class="expand-label">Gross profit</div><div class="expand-val ${cc(grossProfit)}">${fmt(grossProfit)}</div></div>
+        <div><div class="expand-label">Contrib. margin</div><div class="expand-val ${cc(contribM)}">${fmt(contribM)}</div></div>
+        <div><div class="expand-label">Net / unit</div><div class="expand-val ${cc(netProfit)}">${fmt(netProfit)}</div></div>
+        <div><div class="expand-label">Monthly net</div><div class="expand-val ${cc(monthlyNet)}">${fmtK(monthlyNet)}</div></div>
+        ${procFeeAmt > 0 ? `<div><div class="expand-label">Processing fee</div><div class="expand-val r">${fmt(-procFeeAmt)}</div></div>` : ''}
+        <div><div class="expand-label">Total inv.</div><div class="expand-val a">${fmtK(totalInv)}</div><div style="font-size:10px;color:var(--faint);margin-top:2px;white-space:normal">${fmt(productCost)} prod + ${dv(e.ship,n=>'$'+n.toFixed(2))} ship + ${dv(e.pnp,n=>'$'+n.toFixed(2))} P&amp;P × ${e.units.toLocaleString()} + $${e.opex.toLocaleString()} opex</div></div>
+      </div>
+      <div class="expand-section-label">Inputs</div>
+      <div class="expand-grid">
+        <div><div class="expand-label">Sale price</div><div class="expand-val">$${e.sale.toFixed(2)}</div></div>
+        ${e.refund ? `<div><div class="expand-label">Refund rate</div><div class="expand-val">${e.refund.toFixed(1)}%</div></div>` : ''}
+        <div><div class="expand-label">CAC</div><div class="expand-val">$${e.cac}</div></div>
+        <div><div class="expand-label">Ingredients</div><div class="expand-val">${dv(e.ingr, n=>'$'+n.toFixed(2))}</div></div>
+        <div><div class="expand-label">Bottle</div><div class="expand-val">${dv(e.bottle, n=>'$'+n.toFixed(2))}</div></div>
+        <div><div class="expand-label">Spoon</div><div class="expand-val">${dv(e.spoon, n=>'$'+n.toFixed(2))}</div></div>
+        <div><div class="expand-label">Label</div><div class="expand-val">${dv(e.label, n=>'$'+n.toFixed(2))}</div></div>
+        <div><div class="expand-label">Shipping</div><div class="expand-val">${dv(e.ship, n=>'$'+n.toFixed(2))}</div></div>
+        ${e.pnp ? `<div><div class="expand-label">Pick &amp; pack</div><div class="expand-val">$${e.pnp.toFixed(2)}</div></div>` : ''}
+        <div><div class="expand-label">Order qty</div><div class="expand-val">${e.units.toLocaleString()}</div></div>
+        <div><div class="expand-label">Opex/mo</div><div class="expand-val">$${e.opex.toLocaleString()}</div></div>
+        ${servG > 0 ? `<div><div class="expand-label">Serving size</div><div class="expand-val">${servG}g${costPerGram !== null ? ' · $'+costPerGram.toFixed(3)+'/g' : ''}</div></div>` : ''}
+      </div>
+      ${e.notes ? `<div class="expand-section-label" style="margin-top:0.5rem">Notes</div><div class="expand-notes">${e.notes}</div>` : ''}
+    </div></td></tr>` : '';
+
+    return `<tr class="cv-data${isActive ? ' cv-active' : ''}${isExp ? ' cv-expanded' : ''}" onclick="toggleExpand('${e.id}')">
+      <td onclick="event.stopPropagation()">
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="checkbox" class="bulk-chk" ${isBulk ? 'checked' : ''} onchange="toggleBulkSelect('${e.id}')">
+          <button class="cmp-btn${isSel ? ' selected' : ''}" onclick="toggleSelect('${e.id}')">${isSel ? '✓' : '+'}</button>
+        </div>
+      </td>
+      <td class="cv-name">${e.name}</td>
+      <td>${fmt(productCost)}</td>
+      <td style="color:var(--green);font-size:13px;font-weight:600">${fmtK(monthlyNet)}</td>
+      <td class="${cc(grossProfit)}">${fmt(grossProfit)}</td>
+      <td class="${cc(contribM)}">${fmt(contribM)}</td>
+      <td style="color:var(--amber);font-weight:600">${fmtK(totalInv)}</td>
+      <td style="color:var(--faint);font-size:11px">${keyInputs}</td>
+      <td>
+        <div style="display:flex;gap:6px;align-items:center" onclick="event.stopPropagation()">
+          <button class="load-btn" data-action="load" data-id="${e.id}">Load</button>
+          <button class="del-btn" data-action="delete" data-id="${e.id}">×</button>
+          <span style="font-size:10px;color:var(--faint)">${isExp ? '▴' : '▾'}</span>
+        </div>
+      </td>
+    </tr>${detail}`;
+  }).join('');
+
+  return `<div class="cv-wrap"><table class="cv-table">
+    <thead><tr>
+      <th style="width:60px"><input type="checkbox" class="bulk-chk" title="Select all" onchange="selectAllBulk(this.checked)" ${bulkSelected.size === currentEntries.length && currentEntries.length > 0 ? 'checked' : ''}></th>
+      <th>Company</th>
+      <th>Prod cost/unit</th>
+      <th>Mo. net profit</th>
+      <th>Gross profit</th>
+      <th>Contrib.</th>
+      <th>Total inv.</th>
+      <th>Key inputs</th>
+      <th></th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+function renderCompare() {
+  const section = document.getElementById('compare-section');
+  if (selectedIds.length < 2) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+
+  const selected = selectedIds.map(id => currentEntries.find(e => e.id === id)).filter(Boolean);
+
+  function bestIdx(vals, higherBetter) {
+    let best = null, bestVal = null;
+    vals.forEach((v, i) => {
+      if (v == null || isNaN(v)) return;
+      if (bestVal === null || (higherBetter ? v > bestVal : v < bestVal)) { bestVal = v; best = i; }
+    });
+    return best;
+  }
+
+  const metrics = [
+    { section: 'outputs', label: 'Net / unit',      val: e => computeDisplayVals(e).netProfit,   display: fmt,  hi: true },
+    { section: 'outputs', label: 'Monthly net',     val: e => computeDisplayVals(e).monthlyNet,  display: fmtK, hi: true },
+    { section: 'outputs', label: 'Gross profit',    val: e => computeDisplayVals(e).grossProfit, display: fmt,  hi: true },
+    { section: 'outputs', label: 'Contrib. margin', val: e => computeDisplayVals(e).contribM,    display: fmt,  hi: true },
+    { section: 'outputs', label: 'Total inv.',      val: e => calcTotalInv(e),                                    display: fmtK,                         hi: false },
+    { section: 'inputs',  label: 'Sale price',      val: e => e.sale,                                             display: n => '$' + n.toFixed(2),      hi: null },
+    { section: 'inputs',  label: 'Refund rate',     val: e => e.refund,                                           display: n => n.toFixed(1) + '%',      hi: null },
+    { section: 'inputs',  label: 'CAC',             val: e => e.cac,                                              display: n => '$' + n,                 hi: null },
+    { section: 'inputs',  label: 'Ingredients',     val: e => e.ingr,                                             display: n => '$' + n.toFixed(2),      hi: null },
+    { section: 'inputs',  label: 'Product cost',    val: e => e.ingr + e.bottle + e.spoon + e.label,              display: n => '$' + n.toFixed(2),      hi: null },
+    { section: 'inputs',  label: 'Shipping',        val: e => e.ship,                                             display: n => '$' + n.toFixed(2),      hi: null },
+    { section: 'inputs',  label: 'P&P',             val: e => e.pnp,                                              display: n => n ? '$' + n.toFixed(2) : '—', hi: null },
+    { section: 'inputs',  label: 'Order qty',       val: e => e.units,                                            display: n => n.toLocaleString(),      hi: null },
+    { section: 'inputs',  label: 'Opex/mo',         val: e => e.opex,                                             display: fmtK,                         hi: null },
+    { section: 'inputs',  label: 'Serving size',    val: e => e.servingGrams || 0,                                display: n => n ? n + 'g' : '—',       hi: null },
+  ];
+
+  let lastSec = null;
+  const rows = metrics.map(m => {
+    const vals = selected.map(e => m.val(e));
+    const bi = m.hi !== null ? bestIdx(vals, m.hi) : null;
+    let groupRow = '';
+    if (m.section !== lastSec) {
+      groupRow = `<tr class="cmp-group"><td colspan="${selected.length + 1}">${m.section === 'outputs' ? 'Outputs' : 'Inputs'}</td></tr>`;
+      lastSec = m.section;
+    }
+    const cells = vals.map((v, i) => `<td class="${bi === i ? 'cmp-best' : ''}">${v == null ? '—' : m.display(v)}</td>`).join('');
+    return `${groupRow}<tr><td class="cmp-row-label">${m.label}</td>${cells}</tr>`;
+  }).join('');
+
+  const headers = selected.map(e => `<th>${e.name}</th>`).join('');
+
+  section.innerHTML = `<div class="panel-title" style="margin-bottom:1.25rem">Comparison</div>
+    <div class="cmp-wrap"><table class="cmp-table">
+      <thead><tr><th class="cmp-row-header"></th>${headers}</tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+}
+
+document.getElementById('db-section').addEventListener('click', function(e) {
+  const btn = e.target.closest('button[data-action]');
+  if (!btn) return;
+  const id = btn.dataset.id;
+  if (btn.dataset.action === 'load') loadEntry(id);
+  else if (btn.dataset.action === 'delete') deleteEntry(id);
+});
+</script>
+</body>
+</html>
