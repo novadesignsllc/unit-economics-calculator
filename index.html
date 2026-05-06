@@ -15,8 +15,8 @@
     --border: rgba(255,255,255,0.08);
     --border2: rgba(255,255,255,0.14);
     --text: #f0ede8;
-    --muted: #888580;
-    --faint: #444;
+    --muted: #ffffff;
+    --faint: #ffffff;
     --green: #4ade9a;
     --green-dim: rgba(74,222,154,0.12);
     --amber: #f5a623;
@@ -1016,6 +1016,7 @@ function update() {
   const costPerGram      = servG > 0 ? cogs / servG : null;
 
   document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-label">Gross revenue</div><div class="kpi-val a">${fmt(sale)}</div><div class="kpi-sub">sale price</div></div>
     <div class="kpi"><div class="kpi-label">Gross profit</div><div class="kpi-val ${cc(grossProfit)}">${fmt(grossProfit)}</div><div class="kpi-sub">${pct(grossPct)} margin</div></div>
     <div class="kpi"><div class="kpi-label">Contrib. margin</div><div class="kpi-val ${cc(contribM)}">${fmt(contribM)}</div><div class="kpi-sub">${pct(contribPct)} of sale</div></div>
     <div class="kpi"><div class="kpi-label">Opex / unit</div><div class="kpi-val a">${fmt(opexPerUnit)}</div><div class="kpi-sub">at ${units.toLocaleString()} units</div></div>
