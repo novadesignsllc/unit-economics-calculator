@@ -886,9 +886,8 @@
       <div class="slider-group">
         <div class="slider-header">
           <span class="slider-name">Monthly operating costs</span>
-          <span class="slider-value" id="opex-v">$50,000</span>
         </div>
-        <input type="range" id="opex" min="100" max="100000" value="50000" step="100" oninput="update()">
+        <input type="number" id="opex" min="0" value="50000" step="100" oninput="update()" style="width:140px">
       </div>
 
       <div class="save-row">
@@ -994,7 +993,6 @@ function update() {
   document.getElementById('spoon-v').textContent  = '$' + spoon.toFixed(2);
   document.getElementById('label-v').textContent  = '$' + label.toFixed(2);
   document.getElementById('pnp-v').textContent    = '$' + pnp.toFixed(2);
-  document.getElementById('opex-v').textContent   = '$' + opex.toLocaleString();
 
   const returnAmt        = sale * (refundRate / 100);
   const effectiveSale    = sale - returnAmt;
@@ -1017,7 +1015,8 @@ function update() {
 
   document.getElementById('kpis').innerHTML = `
     <div class="kpi"><div class="kpi-label">Gross revenue</div><div class="kpi-val a">${fmt(sale)}</div><div class="kpi-sub">sale price</div></div>
-    <div class="kpi"><div class="kpi-label">Gross profit</div><div class="kpi-val ${cc(grossProfit)}">${fmt(grossProfit)}</div><div class="kpi-sub">${pct(grossPct)} margin</div></div>
+    <div class="kpi"><div class="kpi-label">Gross profit</div><div class="kpi-val ${cc(grossProfit)}">${fmt(grossProfit)}</div><div class="kpi-sub">per unit</div></div>
+    <div class="kpi"><div class="kpi-label">Gross margin</div><div class="kpi-val ${cc(grossProfit)}">${pct(grossPct)}</div><div class="kpi-sub">of sale price</div></div>
     <div class="kpi"><div class="kpi-label">Contrib. margin</div><div class="kpi-val ${cc(contribM)}">${fmt(contribM)}</div><div class="kpi-sub">${pct(contribPct)} of sale</div></div>
     <div class="kpi"><div class="kpi-label">Opex / unit</div><div class="kpi-val a">${fmt(opexPerUnit)}</div><div class="kpi-sub">at ${units.toLocaleString()} units</div></div>
     <div class="kpi"><div class="kpi-label">Net profit / unit</div><div class="kpi-val ${cc(netProfit)}">${fmt(netProfit)}</div><div class="kpi-sub">${costPerGram !== null ? '$' + costPerGram.toFixed(3) + '/g COGS' : pct(netPct) + ' of sale'}</div></div>
@@ -1527,8 +1526,8 @@ function renderCardsView(sorted) {
         <div class="card-actions">
           <input type="checkbox" class="bulk-chk" ${isBulk ? 'checked' : ''} onchange="toggleBulkSelect('${e.id}')">
           <button class="cmp-btn${isSel ? ' selected' : ''}" onclick="toggleSelect('${e.id}')">${isSel ? '✓ Comparing' : '+ Compare'}</button>
-          <button class="load-btn" data-action="load" data-id="${e.id}">Load</button>
-          <button class="del-btn" data-action="delete" data-id="${e.id}">×</button>
+          <button class="load-btn" onclick="loadEntry('${e.id}')">Load</button>
+          <button class="del-btn" onclick="deleteEntry('${e.id}')">×</button>
         </div>
       </div>
       <div class="card-outputs">
@@ -1610,8 +1609,8 @@ function renderTableView(sorted) {
       <td style="color:var(--faint);font-size:11px">${keyInputs}</td>
       <td>
         <div style="display:flex;gap:6px;align-items:center" onclick="event.stopPropagation()">
-          <button class="load-btn" data-action="load" data-id="${e.id}">Load</button>
-          <button class="del-btn" data-action="delete" data-id="${e.id}">×</button>
+          <button class="load-btn" onclick="event.stopPropagation();loadEntry('${e.id}')">Load</button>
+          <button class="del-btn" onclick="event.stopPropagation();deleteEntry('${e.id}')">×</button>
           <span style="font-size:10px;color:var(--faint)">${isExp ? '▴' : '▾'}</span>
         </div>
       </td>
