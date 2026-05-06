@@ -1428,7 +1428,7 @@ function computeDisplayVals(e) {
   const opexPerUnit   = e.opex / e.units;
   const netProfit     = contribM - opexPerUnit;
   const monthlyNet    = netProfit * e.units;
-  const monthlyGross  = grossProfit * e.units;
+  const monthlyGross  = e.sale * e.units;
   return { grossProfit, contribM, netProfit, monthlyNet, monthlyGross, procFeeAmt };
 }
 
@@ -1604,7 +1604,7 @@ function renderTableView(sorted) {
       <td class="cv-name">${e.name}</td>
       <td>${fmt(productCost)}</td>
       <td style="color:var(--green);font-size:13px;font-weight:600">${fmtK(monthlyNet)}</td>
-      <td class="${cc(grossProfit)}">${fmtK(monthlyGross)}</td>
+      <td>${fmtK(monthlyGross)}</td>
       <td class="${cc(contribM)}">${fmt(contribM)}</td>
       <td style="color:var(--amber);font-weight:600">${fmtK(totalInv)}</td>
       <td style="color:var(--faint);font-size:11px">${keyInputs}</td>
@@ -1624,7 +1624,7 @@ function renderTableView(sorted) {
       <th>Company</th>
       <th>Prod cost/unit</th>
       <th>Mo. net profit</th>
-      <th>Mo. gross profit</th>
+      <th>Mo. gross revenue</th>
       <th>Contrib.</th>
       <th>Total inv.</th>
       <th>Key inputs</th>
