@@ -60,6 +60,109 @@
     letter-spacing: 0.04em;
   }
 
+  /* ── Global settings bar ───────────────────────────────── */
+  .global-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0.85rem 2rem;
+  }
+  .global-bar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .global-bar-title {
+    font-size: 9px;
+    font-family: var(--mono);
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 0.5rem;
+    align-self: center;
+    white-space: nowrap;
+  }
+  .global-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .global-field-label {
+    font-size: 9px;
+    font-family: var(--mono);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+  .global-field input[type="number"] {
+    width: 80px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 4px 8px;
+    outline: none;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  .global-field input[type="number"]::-webkit-inner-spin-button,
+  .global-field input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .global-field input[type="number"]:focus {
+    border-color: var(--accent);
+  }
+  .global-sale-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .global-sale-group input[type="range"] {
+    width: 100px;
+  }
+  .global-sale-group input[type="number"] {
+    width: 80px;
+  }
+  @media (max-width: 600px) {
+    .global-bar-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .global-bar-title { grid-column: 1/-1; }
+  }
+
+  /* ── Tooltip system ────────────────────────────────────── */
+  [data-tip] { position: relative; cursor: help; }
+  [data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2a2a2a;
+    color: #f0ede8;
+    font-size: 11px;
+    font-family: var(--sans);
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.12);
+    white-space: pre-wrap;
+    max-width: 260px;
+    min-width: 160px;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 150ms;
+    text-align: left;
+  }
+  [data-tip]:hover::after { opacity: 1; }
+
   .main {
     max-width: 1100px;
     margin: 0 auto;
@@ -109,21 +212,62 @@
     border-bottom: 1px solid var(--border);
   }
 
+  /* ── Section dividers inside left panel ─────────────────── */
+  .section-divider {
+    font-size: 9px;
+    font-family: var(--mono);
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.5rem 0 0.5rem;
+    margin: 0.75rem 0 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+
   .slider-group {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.1rem;
   }
 
   .slider-header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.3rem;
   }
 
   .slider-name {
     font-size: 13px;
     color: var(--muted);
   }
+
+  /* Slider + companion number row */
+  .slider-num-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .slider-num-row input[type=range] {
+    flex: 1;
+  }
+  .slider-num-row input[type=number] {
+    width: 62px;
+    -moz-appearance: textfield;
+    appearance: textfield;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0.25rem 0.4rem;
+    text-align: right;
+    outline: none;
+    flex-shrink: 0;
+  }
+  .slider-num-row input[type=number]::-webkit-inner-spin-button,
+  .slider-num-row input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .slider-num-row input[type=number]:focus { border-color: var(--accent); }
 
   .slider-value {
     font-family: var(--mono);
@@ -230,7 +374,7 @@
   }
 
   .wf-label {
-    width: 175px;
+    width: 185px;
     flex-shrink: 0;
     font-size: 12px;
     color: var(--muted);
@@ -304,7 +448,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.1rem;
   }
 
   .refund-input-wrap {
@@ -470,7 +614,6 @@
 
   .update-btn:hover { background: rgba(74,222,154,0.25); }
 
-
   .del-btn {
     background: none;
     border: 1px solid var(--border2);
@@ -502,7 +645,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.1rem;
   }
 
   .panel.editing {
@@ -597,6 +740,7 @@
     margin-left: 8px;
     letter-spacing: 0.03em;
   }
+
   .fb-status.connected { color: var(--green); opacity: 0.7; }
   .fb-status.error { color: var(--red); }
 
@@ -663,7 +807,7 @@
 
   .card-outputs {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1px;
     background: var(--border);
     border-bottom: 1px solid var(--border);
@@ -768,14 +912,59 @@
   <div class="header-label">Electrolyte Brand · Sale Price: <span id="header-price">$39.99</span></div>
 </header>
 
+<!-- Global Settings Bar -->
+<div class="global-bar">
+  <div class="global-bar-inner">
+    <div class="global-bar-title">Global</div>
+
+    <div class="global-sale-group global-field">
+      <span class="global-field-label" data-tip="The retail price per unit charged to the customer before any deductions.">Sale Price $</span>
+      <input type="range" id="g-sale" min="0" max="200" step="0.01" value="39.99"
+        oninput="document.getElementById('g-sale-num').value=this.value;saveGlobalSettings()">
+      <input type="number" id="g-sale-num" min="0" max="200" step="0.01" value="39.99"
+        oninput="saveGlobalSettingsFromNum()">
+    </div>
+
+    <div class="global-field">
+      <span class="global-field-label" data-tip="Estimated % of orders that result in a return or refund. Reduces effective revenue. Formula: Sale × (1 − Refund%)">Refund Rate %</span>
+      <input type="number" id="g-refund" min="0" max="100" step="0.1" value="0"
+        oninput="saveGlobalSettings()">
+    </div>
+
+    <div class="global-field">
+      <span class="global-field-label" data-tip="Payment processor fee (e.g. Stripe ~2.9%). Applied to net revenue after refunds. Formula: Net Revenue × ProcFee%">Proc. Fee %</span>
+      <input type="number" id="g-procfee" min="0" max="10" step="0.01" value="2.9"
+        oninput="saveGlobalSettings()">
+    </div>
+
+    <div class="global-field">
+      <span class="global-field-label" data-tip="Customer Acquisition Cost — average spend to acquire one new customer (ads, influencers, etc.).">CAC $</span>
+      <input type="number" id="g-cac" min="0" step="0.01" value="12"
+        oninput="saveGlobalSettings()">
+    </div>
+
+    <div class="global-field">
+      <span class="global-field-label" data-tip="Monthly fixed operating expenses (rent, salaries, software, etc.) allocated across units sold.">Monthly OpEx $</span>
+      <input type="number" id="g-opex" min="0" step="100" value="5000"
+        oninput="saveGlobalSettings()">
+    </div>
+
+    <div class="global-field">
+      <span class="global-field-label" data-tip="Per-unit cost to ship from your 3PL warehouse to the customer.">Outbound Ship $</span>
+      <input type="number" id="g-outbound" min="0" step="0.01" value="8"
+        oninput="saveGlobalSettings()">
+    </div>
+  </div>
+</div>
+
 <div class="main">
-  <h1 class="page-title">Per-unit P&L Calculator</h1>
-  <p class="page-sub">Adjust assumptions to find your target ingredient cost and net profit per unit.</p>
+  <h1 class="page-title">Per-unit P&amp;L Calculator</h1>
+  <p class="page-sub">Set global revenue assumptions above, then configure COGS per entry below.</p>
 
   <div class="layout">
 
     <div class="panel" id="assumptions-panel">
-      <div class="panel-title">Assumptions</div>
+      <div class="panel-title">New Entry</div>
 
       <div class="edit-banner" id="edit-banner">
         <span class="edit-banner-label">Editing</span>
@@ -783,118 +972,112 @@
         <button class="cancel-btn" onclick="newEntry()">✕ Cancel</button>
       </div>
 
-      <div class="slider-group">
-        <div class="slider-header">
-          <span class="slider-name">Sale price</span>
-          <span class="slider-value" id="sale-v">$39.99</span>
-        </div>
-        <input type="range" id="sale" min="9.99" max="99.99" value="39.99" step="1" oninput="update()">
+      <!-- Metadata -->
+      <div class="save-row" style="margin-top:0;padding-top:0;border-top:none;margin-bottom:1rem;">
+        <input type="text" id="company-name" class="company-input" placeholder="Company name…" maxlength="60">
       </div>
+      <textarea id="entry-notes" class="notes-textarea" style="margin-top:0;" placeholder="Notes…" maxlength="500"></textarea>
 
-      <div class="refund-row">
-        <span class="slider-name">Refund rate</span>
+      <div class="oq-row" style="margin-top:1rem;">
+        <span class="slider-name" data-tip="Order Quantity — number of units in this production run / monthly order.">OQ (units)</span>
         <div class="refund-input-wrap">
-          <input type="number" id="refund" min="0" max="50" value="0" step="0.1" oninput="update()">
-          <span class="pct-symbol">%</span>
+          <input type="number" id="oq-input" min="1" value="100" step="1" oninput="update()" style="width:80px">
         </div>
       </div>
 
-      <div class="refund-row">
-        <span class="slider-name">Processing fee</span>
-        <div class="refund-input-wrap">
-          <input type="number" id="proc-fee" min="0" max="20" value="0" step="0.01" oninput="syncProcessingFee()">
-          <span class="pct-symbol">%</span>
-        </div>
-      </div>
-
-      <hr class="divider">
+      <!-- COGS Section -->
+      <div class="section-divider">COGS</div>
 
       <div class="slider-group">
         <div class="slider-header">
-          <span class="slider-name">CAC</span>
-          <span class="slider-value" id="cac-v">$12</span>
+          <span class="slider-name" data-tip="Raw material / formulation cost per unit.">Ingredient Cost</span>
         </div>
-        <input type="range" id="cac" min="5" max="55" value="12" step="1" oninput="update()">
-      </div>
-
-      <div class="oq-row">
-        <span class="slider-name">Order qty (OQ)</span>
-        <div class="refund-input-wrap">
-          <input type="number" id="oq" min="1" value="500" step="1" oninput="syncOQ()" style="width:80px">
-          <span class="pct-symbol" style="font-size:12px;color:var(--muted)">units</span>
-        </div>
-      </div>
-
-      <div class="oq-row">
-        <span class="slider-name">Ingredient cost (PPU)</span>
-        <div class="refund-input-wrap">
-          <span class="pct-symbol">$</span>
-          <input type="number" id="ingr-input" min="0" value="8" step="0.1" oninput="syncPPU()" style="width:70px">
-        </div>
-      </div>
-
-      <div class="oq-row">
-        <span class="slider-name">Est. serving size</span>
-        <div class="refund-input-wrap">
-          <input type="number" id="serv-input" min="0" value="30" step="1" oninput="update()" style="width:62px">
-          <span class="pct-symbol" style="font-size:12px;color:var(--muted)">g</span>
+        <div class="slider-num-row">
+          <input type="range" id="ingr" min="0" max="50" step="0.01" value="8"
+            oninput="syncNum('ingr','ingr-input');update()">
+          <input type="number" id="ingr-input" min="0" max="50" step="0.01" value="8"
+            oninput="syncSlider('ingr-input','ingr');update()">
         </div>
       </div>
 
       <div class="slider-group">
         <div class="slider-header">
-          <span class="slider-name">Shipping</span>
-          <span class="slider-value" id="ship-v">$1.00</span>
+          <span class="slider-name" data-tip="Per-unit label printing cost.">Label</span>
         </div>
-        <input type="range" id="ship" min="0" max="5" value="1" step="0.1" oninput="update()">
+        <div class="slider-num-row">
+          <input type="range" id="label-s" min="0" max="5" step="0.01" value="0.10"
+            oninput="syncNum('label-s','label-input');update()">
+          <input type="number" id="label-input" min="0" max="5" step="0.01" value="0.10"
+            oninput="syncSlider('label-input','label-s');update()">
+        </div>
       </div>
 
       <div class="slider-group">
         <div class="slider-header">
-          <span class="slider-name">Bottle</span>
-          <span class="slider-value" id="bottle-v">$0.50</span>
+          <span class="slider-name" data-tip="Per-unit packaging cost including container and closure.">Bottle + Lid/Cap</span>
         </div>
-        <input type="range" id="bottle" min="0" max="3" value="0.50" step="0.1" oninput="update()">
+        <div class="slider-num-row">
+          <input type="range" id="bottle" min="0" max="15" step="0.01" value="0.50"
+            oninput="syncNum('bottle','bottle-input');update()">
+          <input type="number" id="bottle-input" min="0" max="15" step="0.01" value="0.50"
+            oninput="syncSlider('bottle-input','bottle');update()">
+        </div>
       </div>
 
       <div class="slider-group">
         <div class="slider-header">
-          <span class="slider-name">Serving spoon</span>
-          <span class="slider-value" id="spoon-v">$0.20</span>
+          <span class="slider-name" data-tip="Per-unit accessory cost (if applicable).">Serving Spoon</span>
         </div>
-        <input type="range" id="spoon" min="0" max="1" value="0.20" step="0.1" oninput="update()">
+        <div class="slider-num-row">
+          <input type="range" id="spoon" min="0" max="5" step="0.01" value="0.20"
+            oninput="syncNum('spoon','spoon-input');update()">
+          <input type="number" id="spoon-input" min="0" max="5" step="0.01" value="0.20"
+            oninput="syncSlider('spoon-input','spoon');update()">
+        </div>
       </div>
 
       <div class="slider-group">
         <div class="slider-header">
-          <span class="slider-name">Label</span>
-          <span class="slider-value" id="label-v">$0.10</span>
+          <span class="slider-name" data-tip="Per-unit tamper-evident seal cost.">Tamper Seal</span>
         </div>
-        <input type="range" id="label" min="0" max="1" value="0.10" step="0.1" oninput="update()">
+        <div class="slider-num-row">
+          <input type="range" id="tamper" min="0" max="3" step="0.01" value="0"
+            oninput="syncNum('tamper','tamper-input');update()">
+          <input type="number" id="tamper-input" min="0" max="3" step="0.01" value="0"
+            oninput="syncSlider('tamper-input','tamper');update()">
+        </div>
       </div>
 
       <div class="slider-group">
         <div class="slider-header">
-          <span class="slider-name">Pick & pack (3PL)</span>
-          <span class="slider-value" id="pnp-v">$0.00</span>
+          <span class="slider-name" data-tip="Cost to ship from manufacturer to your 3PL warehouse, per unit.">Inbound Shipping</span>
         </div>
-        <input type="range" id="pnp" min="0" max="10" value="0" step="0.1" oninput="update()">
+        <div class="slider-num-row">
+          <input type="range" id="ship" min="0" max="10" step="0.01" value="1"
+            oninput="syncNum('ship','ship-input');update()">
+          <input type="number" id="ship-input" min="0" max="10" step="0.01" value="1"
+            oninput="syncSlider('ship-input','ship');update()">
+        </div>
       </div>
 
-      <hr class="divider">
+      <!-- Variable Costs Section -->
+      <div class="section-divider">Variable Costs</div>
 
       <div class="slider-group">
         <div class="slider-header">
-          <span class="slider-name">Monthly operating costs</span>
+          <span class="slider-name" data-tip="3PL fee to pick, pack, and prepare each order for shipment.">Pick &amp; Pack</span>
         </div>
-        <input type="number" id="opex" min="0" value="50000" step="100" oninput="update()" style="width:140px">
+        <div class="slider-num-row">
+          <input type="range" id="pnp" min="0" max="15" step="0.01" value="0"
+            oninput="syncNum('pnp','pnp-input');update()">
+          <input type="number" id="pnp-input" min="0" max="15" step="0.01" value="0"
+            oninput="syncSlider('pnp-input','pnp');update()">
+        </div>
       </div>
 
       <div class="save-row">
-        <input type="text" id="company-name" class="company-input" placeholder="Company name…" maxlength="60">
         <button class="save-btn" id="save-btn" onclick="saveEntry()">+ Save entry</button>
       </div>
-      <textarea id="entry-notes" class="notes-textarea" placeholder="Notes…" maxlength="500"></textarea>
     </div>
 
     <div class="right-col">
@@ -925,7 +1108,6 @@
 
 <script>
 // ── Firebase config ────────────────────────────────────────────────────────
-// Paste your config from Firebase Console > Project Settings > Your apps
 const firebaseConfig = {
   apiKey:            "AIzaSyBsIblXL-jPAj6MugefYwwTQQiG98shHF0",
   authDomain:        "calculator-ce3d1.firebaseapp.com",
@@ -958,8 +1140,9 @@ entriesCol.orderBy('savedAt', 'asc').onSnapshot(
 );
 
 // ── Helpers ────────────────────────────────────────────────────────────────
-function fmt(n) {
-  return (n < 0 ? '-$' : '$') + Math.abs(n).toFixed(2);
+function fmt(n, decimals) {
+  const d = (decimals !== undefined) ? decimals : 2;
+  return (n < 0 ? '-$' : '$') + Math.abs(n).toFixed(d);
 }
 function fmtK(n) {
   const abs = Math.abs(n);
@@ -970,122 +1153,226 @@ function pct(n) { return n.toFixed(1) + '%'; }
 function cc(n) { return n >= 5 ? 'g' : n >= 0 ? 'a' : 'r'; }
 function dv(n, fn) { return n === 0 ? '—' : fn(n); }
 
-// ── Calculator ─────────────────────────────────────────────────────────────
+// ── Slider / number two-way sync ──────────────────────────────────────────
+function syncNum(sliderId, numId) {
+  document.getElementById(numId).value = document.getElementById(sliderId).value;
+}
+function syncSlider(numId, sliderId) {
+  const v = +document.getElementById(numId).value;
+  const el = document.getElementById(sliderId);
+  if (v >= +el.min && v <= +el.max) el.value = v;
+}
+
+// ── Global settings ────────────────────────────────────────────────────────
+const DEFAULT_SETTINGS = {
+  sale: 39.99, refundRate: 0, procFeePct: 2.9,
+  cac: 12, monthlyOpex: 5000, outboundShipping: 8
+};
+let globalSettings = { ...DEFAULT_SETTINGS };
+
+function loadGlobalSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('globalSettings') || '{}');
+    globalSettings = { ...DEFAULT_SETTINGS, ...saved };
+  } catch(e) { globalSettings = { ...DEFAULT_SETTINGS }; }
+  document.getElementById('g-sale').value        = globalSettings.sale;
+  document.getElementById('g-sale-num').value    = globalSettings.sale;
+  document.getElementById('g-refund').value      = globalSettings.refundRate;
+  document.getElementById('g-procfee').value     = globalSettings.procFeePct;
+  document.getElementById('g-cac').value         = globalSettings.cac;
+  document.getElementById('g-opex').value        = globalSettings.monthlyOpex;
+  document.getElementById('g-outbound').value    = globalSettings.outboundShipping;
+}
+
+function saveGlobalSettings() {
+  globalSettings.sale            = +document.getElementById('g-sale').value || DEFAULT_SETTINGS.sale;
+  document.getElementById('g-sale-num').value = globalSettings.sale;
+  globalSettings.refundRate      = +document.getElementById('g-refund').value || 0;
+  globalSettings.procFeePct      = +document.getElementById('g-procfee').value || 0;
+  globalSettings.cac             = +document.getElementById('g-cac').value || 0;
+  globalSettings.monthlyOpex     = +document.getElementById('g-opex').value || 0;
+  globalSettings.outboundShipping= +document.getElementById('g-outbound').value || 0;
+  localStorage.setItem('globalSettings', JSON.stringify(globalSettings));
+  document.getElementById('header-price').textContent = '$' + globalSettings.sale.toFixed(2);
+  update();
+  if (currentEntries.length) renderDB(currentEntries);
+}
+
+function saveGlobalSettingsFromNum() {
+  const v = +document.getElementById('g-sale-num').value;
+  document.getElementById('g-sale').value = v;
+  saveGlobalSettings();
+}
+
+// ── Pure math: computeDisplayVals (defined below after renderOutputs) ────
+
+// ── Backward-compatible field normalizer ──────────────────────────────────
+function normalizeEntry(e) {
+  return {
+    ...e,
+    ingredients:      e.ingredients     ?? e.ingr  ?? 0,
+    label:            e.label           ?? 0,
+    bottle:           e.bottle          ?? 0,
+    spoon:            e.spoon           ?? 0,
+    tamperSeal:       e.tamperSeal      ?? 0,
+    inboundShipping:  e.inboundShipping ?? e.ship  ?? 0,
+    pickpack:         e.pickpack        ?? e.pnp   ?? 0,
+    oq:               e.oq              ?? e.units ?? 100,
+  };
+}
+
+// ── Main update ────────────────────────────────────────────────────────────
 function update() {
-  const sale       = +document.getElementById('sale').value;
-  const refundRate = +document.getElementById('refund').value || 0;
-  const cac        = +document.getElementById('cac').value;
-  const ingr       = +document.getElementById('ingr-input').value || 0;
-  const ship       = +document.getElementById('ship').value;
-  const bottle     = +document.getElementById('bottle').value;
-  const spoon      = +document.getElementById('spoon').value;
-  const label      = +document.getElementById('label').value;
-  const pnp        = +document.getElementById('pnp').value;
-  const units      = +document.getElementById('oq').value || 1;
-  const opex       = +document.getElementById('opex').value;
-  const servG      = +document.getElementById('serv-input').value || 0;
+  const entry = {
+    ingredients:    +document.getElementById('ingr-input').value   || 0,
+    label:          +document.getElementById('label-input').value  || 0,
+    bottle:         +document.getElementById('bottle').value        || 0,
+    spoon:          +document.getElementById('spoon').value         || 0,
+    tamperSeal:     +document.getElementById('tamper-input').value || 0,
+    inboundShipping:+document.getElementById('ship').value          || 0,
+    pickpack:       +document.getElementById('pnp').value           || 0,
+    oq:             +document.getElementById('oq-input').value      || 100,
+  };
+  const v = computeDisplayVals(entry, globalSettings);
+  renderOutputs(v);
+}
 
-  document.getElementById('sale-v').textContent   = '$' + sale.toFixed(2);
-  document.getElementById('header-price').textContent = '$' + sale.toFixed(2);
-  document.getElementById('cac-v').textContent    = '$' + cac;
-  document.getElementById('ship-v').textContent   = '$' + ship.toFixed(2);
-  document.getElementById('bottle-v').textContent = '$' + bottle.toFixed(2);
-  document.getElementById('spoon-v').textContent  = '$' + spoon.toFixed(2);
-  document.getElementById('label-v').textContent  = '$' + label.toFixed(2);
-  document.getElementById('pnp-v').textContent    = '$' + pnp.toFixed(2);
-
-  const returnAmt        = sale * (refundRate / 100);
-  const effectiveSale    = sale - returnAmt;
-  const processingFeeAmt = effectiveSale * (processingFeePct / 100);
-  const packagingPerUnit = ship + bottle + spoon + label + pnp;
-  const cogs             = ingr + packagingPerUnit;
-  const grossProfit      = effectiveSale - processingFeeAmt - cogs;
-  const grossPct         = grossProfit / sale * 100;
-  const contribM         = grossProfit - cac;
-  const contribPct       = contribM / sale * 100;
-  const opexPerUnit      = opex / units;
-  const netProfit        = contribM - opexPerUnit;
-  const netPct           = netProfit / sale * 100;
-  const monthlyNet       = netProfit * units;
-  const breakeven        = contribM > 0 ? Math.ceil(opex / contribM) : null;
-  const maxIngr          = effectiveSale - processingFeeAmt - cac - packagingPerUnit - opexPerUnit;
-  const productCostPPU   = ingr + bottle + spoon + label;
-  const totalInvestment  = (productCostPPU + ship + pnp) * units + opex;
-  const costPerGram      = servG > 0 ? cogs / servG : null;
-
+function renderOutputs(v) {
+  // KPI cards
   document.getElementById('kpis').innerHTML = `
-    <div class="kpi"><div class="kpi-label">Gross revenue</div><div class="kpi-val a">${fmt(sale)}</div><div class="kpi-sub">sale price</div></div>
-    <div class="kpi"><div class="kpi-label">Gross profit</div><div class="kpi-val ${cc(grossProfit)}">${fmt(grossProfit)}</div><div class="kpi-sub">per unit</div></div>
-    <div class="kpi"><div class="kpi-label">Gross margin</div><div class="kpi-val ${cc(grossProfit)}">${pct(grossPct)}</div><div class="kpi-sub">of sale price</div></div>
-    <div class="kpi"><div class="kpi-label">Contrib. margin</div><div class="kpi-val ${cc(contribM)}">${fmt(contribM)}</div><div class="kpi-sub">${pct(contribPct)} of sale</div></div>
-    <div class="kpi"><div class="kpi-label">Opex / unit</div><div class="kpi-val a">${fmt(opexPerUnit)}</div><div class="kpi-sub">at ${units.toLocaleString()} units</div></div>
-    <div class="kpi"><div class="kpi-label">Net profit / unit</div><div class="kpi-val ${cc(netProfit)}">${fmt(netProfit)}</div><div class="kpi-sub">${costPerGram !== null ? '$' + costPerGram.toFixed(3) + '/g COGS' : pct(netPct) + ' of sale'}</div></div>
+    <div class="kpi">
+      <div class="kpi-label" data-tip="Sale Price × OQ. Total revenue if all units sell at full price.">Total OQ Gross Rev</div>
+      <div class="kpi-val a">${fmtK(v.totalOQRevenue)}</div>
+      <div class="kpi-sub">${v.oq.toLocaleString()} units</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label" data-tip="Effective Revenue − all COGS. Formula: (Sale×(1−Refund%)×(1−ProcFee%)) − (Ingredients+Label+Bottle+Spoon+Tamper+Inbound)">Gross Profit / Unit</div>
+      <div class="kpi-val ${cc(v.grossProfit)}">${fmt(v.grossProfit)}</div>
+      <div class="kpi-sub">per unit</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label" data-tip="Gross Profit ÷ Sale Price × 100. Higher is better; 50%+ is healthy for CPG.">Gross Margin %</div>
+      <div class="kpi-val ${cc(v.grossProfit)}">${v.grossMarginPct.toFixed(1)}%</div>
+      <div class="kpi-sub">of sale price</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label" data-tip="Gross Profit − variable fulfillment costs (Pick&Pack + Outbound Shipping). What each unit contributes before fixed costs and marketing.">Contrib. Margin / Unit</div>
+      <div class="kpi-val ${cc(v.contribMargin)}">${fmt(v.contribMargin)}</div>
+      <div class="kpi-sub">${v.contribPct.toFixed(1)}% of sale</div>
+    </div>
   `;
 
+  // Waterfall
+  const sale = v.sale;
   const steps = [
-    { label: 'Sale price',                            amt:  sale,         pct: 1,                              color: '#4ade9a', bold: false },
-    { label: `— Returns (${refundRate.toFixed(1)}%)`,                          amt: -returnAmt,        pct: returnAmt / sale,        color: '#f05a5a', bold: false },
-    ...(processingFeePct > 0 ? [{ label: `— Processing fee (${processingFeePct.toFixed(2)}%)`, amt: -processingFeeAmt, pct: processingFeeAmt / sale, color: '#f5a623', bold: false }] : []),
-    { label: '— Ingredients',                                                   amt: -ingr,             pct: ingr / sale,             color: '#f05a5a', bold: false },
-    { label: '— Shipping',                            amt: -ship,         pct: ship / sale,                    color: '#f07070', bold: false },
-    { label: '— Bottle',                              amt: -bottle,       pct: bottle / sale,                  color: '#f07070', bold: false },
-    { label: '— Serving spoon',                       amt: -spoon,        pct: spoon / sale,                   color: '#f07070', bold: false },
-    { label: '— Label',                               amt: -label,        pct: label / sale,                   color: '#f07070', bold: false },
-    { label: '— Pick & pack',                         amt: -pnp,          pct: pnp / sale,                     color: '#f07070', bold: false },
-    { label: `Gross profit (${pct(grossPct)})`,       amt:  grossProfit,  pct: Math.max(grossProfit,0)/sale,   color: '#4ade9a', bold: true,  sep: true },
-    { label: '— CAC',                                 amt: -cac,          pct: cac / sale,                     color: '#f05a5a', bold: false },
-    { label: `Contrib. margin (${pct(contribPct)})`,  amt:  contribM,     pct: Math.max(contribM,0)/sale,      color: '#4ade9a', bold: true,  sep: true },
-    { label: '— Opex / unit',                         amt: -opexPerUnit,  pct: opexPerUnit / sale,             color: '#f5a623', bold: false },
-    { label: `Net profit (${pct(netPct)})`,           amt:  netProfit,    pct: Math.max(netProfit,0)/sale,     color: netProfit >= 0 ? '#4ade9a' : '#f05a5a', bold: true,  sep: true, net: true },
+    { label: 'Sale Price',                                            amt:  sale,             pct: 1,                                             color: '#4ade9a', bold: false },
+    ...(v.refundAmt > 0   ? [{ label: `— Refund (${globalSettings.refundRate.toFixed(1)}%)`,      amt: -v.refundAmt,      pct: v.refundAmt / sale,      color: '#f05a5a', bold: false }] : []),
+    ...(v.procFeeAmt > 0  ? [{ label: `— Processing Fee (${globalSettings.procFeePct.toFixed(2)}%)`, amt: -v.procFeeAmt,  pct: v.procFeeAmt / sale,     color: '#f05a5a', bold: false }] : []),
+    { label: '= Effective Revenue',                                   amt:  v.effectiveRev,   pct: Math.max(v.effectiveRev, 0) / sale,              color: '#4ade9a', bold: true,  sep: true },
+    { label: '— Ingredients',                                         amt: -v.cogs_ingr,      pct: (v.cogs_ingr || 0) / sale,                       color: '#f05a5a', bold: false },
+    { label: '— Label',                                               amt: -v.cogs_label,     pct: (v.cogs_label || 0) / sale,                      color: '#f05a5a', bold: false },
+    { label: '— Bottle + Lid/Cap',                                    amt: -v.cogs_bottle,    pct: (v.cogs_bottle || 0) / sale,                     color: '#f05a5a', bold: false },
+    { label: '— Serving Spoon',                                       amt: -v.cogs_spoon,     pct: (v.cogs_spoon || 0) / sale,                      color: '#f05a5a', bold: false },
+    { label: '— Tamper Seal',                                         amt: -v.cogs_tamper,    pct: (v.cogs_tamper || 0) / sale,                     color: '#f05a5a', bold: false },
+    { label: '— Inbound Shipping',                                    amt: -v.cogs_inbound,   pct: (v.cogs_inbound || 0) / sale,                    color: '#f05a5a', bold: false },
+    { label: `= Gross Profit (${v.grossMarginPct.toFixed(1)}%)`,      amt:  v.grossProfit,    pct: Math.max(v.grossProfit, 0) / sale,                color: v.grossProfit >= 0 ? '#4ade9a' : '#f05a5a', bold: true, sep: true },
+    { label: '— Pick & Pack',                                         amt: -v.cogs_pnp,       pct: (v.cogs_pnp || 0) / sale,                        color: '#f05a5a', bold: false },
+    { label: '— Outbound Shipping',                                   amt: -globalSettings.outboundShipping, pct: globalSettings.outboundShipping / sale, color: '#f05a5a', bold: false },
+    { label: `= Contrib. Margin (${v.contribPct.toFixed(1)}%)`,       amt:  v.contribMargin,  pct: Math.max(v.contribMargin, 0) / sale,              color: v.contribMargin >= 0 ? '#4ade9a' : '#f05a5a', bold: true, sep: true },
+    { label: '— CAC',                                                 amt: -globalSettings.cac, pct: globalSettings.cac / sale,                     color: '#f05a5a', bold: false },
+    { label: '— OpEx / Unit',                                         amt: -v.opexPerUnit,    pct: v.opexPerUnit / sale,                             color: '#f05a5a', bold: false },
+    { label: '= Net Profit',                                          amt:  v.netProfit,      pct: Math.max(v.netProfit, 0) / sale,                  color: v.netProfit >= 0 ? '#4ade9a' : '#f05a5a', bold: true, sep: true, net: true },
   ];
 
-  document.getElementById('waterfall').innerHTML = steps.map(s => `
-    <div class="wf-row${s.sep ? ' wf-sep' : ''}">
-      <div class="wf-label ${s.bold ? 'bold' : ''}">${s.label}</div>
-      <div class="wf-track"><div class="wf-bar" style="width:${Math.max(s.pct*100,0.5).toFixed(1)}%;background:${s.color};"></div></div>
-      <div class="wf-amt${s.net ? ' wf-amt-net' : ''}" style="color:${s.net ? '#4ade9a' : s.amt >= 0 ? '#f0ede8' : '#f05a5a'}">${fmt(s.amt)}</div>
+  document.getElementById('waterfall').innerHTML = steps.map(st => `
+    <div class="wf-row${st.sep ? ' wf-sep' : ''}">
+      <div class="wf-label ${st.bold ? 'bold' : ''}">${st.label}</div>
+      <div class="wf-track"><div class="wf-bar" style="width:${Math.max((st.pct||0)*100,0.5).toFixed(1)}%;background:${st.color};"></div></div>
+      <div class="wf-amt${st.net ? ' wf-amt-net' : ''}" style="color:${st.net ? '#4ade9a' : st.amt >= 0 ? '#f0ede8' : '#f05a5a'}">${fmt(st.amt)}</div>
     </div>
   `).join('');
 
+  // Monthly KPIs
   document.getElementById('monthly').innerHTML = `
-    <div class="monthly-kpi"><div class="kpi-label">Monthly net profit</div><div class="kpi-val ${cc(monthlyNet)}">${fmtK(monthlyNet)}</div></div>
-    <div class="monthly-kpi"><div class="kpi-label">Break-even units / mo</div><div class="kpi-val ${breakeven && units >= breakeven ? 'g' : 'a'}">${breakeven ? breakeven.toLocaleString() : 'N/A'}</div></div>
-    <div class="monthly-kpi"><div class="kpi-label">Total investment</div><div class="kpi-val a">${fmtK(totalInvestment)}</div><div class="kpi-sub">(prod cost + P&amp;L) × OQ + opex</div></div>
+    <div class="monthly-kpi">
+      <div class="kpi-label" data-tip="Net Profit/Unit × OQ. Monthly bottom line after all costs.">Monthly Net Profit</div>
+      <div class="kpi-val ${cc(v.monthlyNet)}">${fmtK(v.monthlyNet)}</div>
+    </div>
+    <div class="monthly-kpi">
+      <div class="kpi-label" data-tip="Contribution Margin − CAC − (Monthly OpEx ÷ OQ). True per-unit bottom line.">Net Profit / Unit</div>
+      <div class="kpi-val ${cc(v.netProfit)}">${fmt(v.netProfit)}</div>
+    </div>
+    <div class="monthly-kpi">
+      <div class="kpi-label" data-tip="Monthly OpEx ÷ Contribution Margin. Units needed to cover fixed costs.">Break-even Units</div>
+      <div class="kpi-val ${v.breakeven && v.oq >= v.breakeven ? 'g' : 'a'}">${v.breakeven ? v.breakeven.toLocaleString() : 'N/A'}</div>
+      <div class="kpi-sub">units/mo</div>
+    </div>
   `;
 
-  const v = document.getElementById('verdict');
-  if (netProfit >= 5) {
-    v.className = 'verdict ok';
-    v.innerHTML = `<strong>Healthy</strong> — You're netting ${fmt(netProfit)} per unit (${pct(netPct)}). At ${units.toLocaleString()} units/mo that's <strong>${fmtK(monthlyNet)}/month</strong> after all costs including operating expenses. Max ingredient budget at this setup: <strong>${fmt(Math.max(maxIngr,0))}</strong>.`;
-  } else if (netProfit >= 0) {
-    v.className = 'verdict warn';
-    v.innerHTML = `<strong>Tight</strong> — Profitable but thin at ${fmt(netProfit)}/unit. You need <strong>${breakeven ? breakeven.toLocaleString() : '—'} units/mo</strong> to cover opex. To improve: reduce ingredients below ${fmt(Math.max(maxIngr,0))}, lower CAC, or grow volume.`;
+  // Verdict
+  const el = document.getElementById('verdict');
+  if (v.netProfit >= 5) {
+    el.className = 'verdict ok';
+    el.innerHTML = `<strong>Healthy</strong> — Netting ${fmt(v.netProfit)}/unit. At ${v.oq.toLocaleString()} units/mo that's <strong>${fmtK(v.monthlyNet)}/month</strong> after all costs including operating expenses.`;
+  } else if (v.netProfit >= 0) {
+    el.className = 'verdict warn';
+    el.innerHTML = `<strong>Tight</strong> — Profitable but thin at ${fmt(v.netProfit)}/unit. You need <strong>${v.breakeven ? v.breakeven.toLocaleString() : '—'} units/mo</strong> to cover opex.`;
   } else {
-    v.className = 'verdict bad';
-    v.innerHTML = `<strong>Not viable yet</strong> — Losing ${fmt(Math.abs(netProfit))}/unit after all costs. To break even at current volume, ingredients must be under <strong>${fmt(Math.max(maxIngr,0))}</strong>. Or you need to sell <strong>${breakeven ? breakeven.toLocaleString() : '—'} units/mo</strong> to absorb the opex burden.`;
+    el.className = 'verdict bad';
+    el.innerHTML = `<strong>Not viable yet</strong> — Losing ${fmt(Math.abs(v.netProfit))}/unit after all costs. You need <strong>${v.breakeven ? v.breakeven.toLocaleString() : '—'} units/mo</strong> to absorb the opex burden.`;
   }
 }
 
-// ── OQ / PPU sync ──────────────────────────────────────────────────────────
-function syncOQ() {
-  update();
+// ── Pure math: computeDisplayVals ─────────────────────────────────────────
+function computeDisplayVals(entry, settings) {
+  const s = settings || globalSettings;
+  const sale = s.sale;
+  const oq   = entry.oq || 1;
+
+  const refundAmt    = sale * (s.refundRate / 100);
+  const netRevenue   = sale - refundAmt;
+  const procFeeAmt   = netRevenue * (s.procFeePct / 100);
+  const effectiveRev = netRevenue - procFeeAmt;
+
+  const cogs_ingr    = entry.ingredients     || 0;
+  const cogs_label   = entry.label           || 0;
+  const cogs_bottle  = entry.bottle          || 0;
+  const cogs_spoon   = entry.spoon           || 0;
+  const cogs_tamper  = entry.tamperSeal      || 0;
+  const cogs_inbound = entry.inboundShipping || 0;
+  const cogs_pnp     = entry.pickpack        || 0;
+
+  const cogs = cogs_ingr + cogs_label + cogs_bottle + cogs_spoon + cogs_tamper + cogs_inbound;
+
+  const grossProfit    = effectiveRev - cogs;
+  const grossMarginPct = sale > 0 ? (grossProfit / sale) * 100 : 0;
+
+  const variableCosts  = cogs_pnp + s.outboundShipping;
+  const contribMargin  = grossProfit - variableCosts;
+  const contribPct     = sale > 0 ? (contribMargin / sale) * 100 : 0;
+
+  const opexPerUnit  = oq > 0 ? s.monthlyOpex / oq : 0;
+  const netAfterCAC  = contribMargin - s.cac;
+  const netProfit    = netAfterCAC - opexPerUnit;
+
+  const monthlyNet     = netProfit * oq;
+  const totalOQRevenue = sale * oq;
+
+  const breakeven = contribMargin > 0 ? Math.ceil(s.monthlyOpex / contribMargin) : null;
+  const totalInv  = cogs * oq + s.monthlyOpex;
+
+  return {
+    sale, oq, refundAmt, netRevenue, procFeeAmt, effectiveRev,
+    cogs, grossProfit, grossMarginPct,
+    variableCosts, contribMargin, contribPct,
+    opexPerUnit, netAfterCAC, netProfit,
+    monthlyNet, totalOQRevenue, breakeven, totalInv,
+    // breakdown
+    cogs_ingr, cogs_label, cogs_bottle, cogs_spoon, cogs_tamper, cogs_inbound, cogs_pnp,
+    // legacy aliases for compare panel
+    contribM: contribMargin, monthlyGross: totalOQRevenue
+  };
 }
-
-function syncPPU() {
-  update();
-}
-
-let processingFeePct = parseFloat(localStorage.getItem('processingFee') || '0');
-document.getElementById('proc-fee').value = processingFeePct;
-
-function syncProcessingFee() {
-  processingFeePct = +document.getElementById('proc-fee').value || 0;
-  localStorage.setItem('processingFee', processingFeePct);
-  update();
-  renderDB(currentEntries);
-}
-
-update();
 
 // ── Entries (Firestore) ────────────────────────────────────────────────────
 let activeEntryId = null;
@@ -1107,12 +1394,17 @@ function sortBy(col) {
 }
 
 function getEntryVal(e, col) {
-  const productCost = e.ingr + e.bottle + e.spoon + e.label;
-  if (col === 'productCost') return productCost;
-  if (col === 'totalInvestment') {
-    return (productCost + (e.ship || 0) + (e.pnp || 0)) * e.units + e.opex;
-  }
-  return e[col];
+  const ne = normalizeEntry(e);
+  const v  = computeDisplayVals(ne, globalSettings);
+  if (col === 'name')          return ne.name || '';
+  if (col === 'oq')            return ne.oq;
+  if (col === 'cogs')          return ne.cogs;
+  if (col === 'grossProfit')   return v.grossProfit;
+  if (col === 'grossMargin')   return v.grossMarginPct;
+  if (col === 'contribMargin') return v.contribMargin;
+  if (col === 'netProfit')     return v.netProfit;
+  if (col === 'monthlyNet')    return v.monthlyNet;
+  return 0;
 }
 
 function getSortedEntries(entries) {
@@ -1128,33 +1420,18 @@ function getSortedEntries(entries) {
 }
 
 function buildEntry(name) {
-  const sale         = +document.getElementById('sale').value;
-  const refund       = +document.getElementById('refund').value || 0;
-  const cac          = +document.getElementById('cac').value;
-  const ingr         = +document.getElementById('ingr-input').value;
-  const ship         = +document.getElementById('ship').value;
-  const bottle       = +document.getElementById('bottle').value;
-  const spoon        = +document.getElementById('spoon').value;
-  const label        = +document.getElementById('label').value;
-  const pnp          = +document.getElementById('pnp').value;
-  const units        = +document.getElementById('oq').value;
-  const opex         = +document.getElementById('opex').value;
-  const servingGrams = +document.getElementById('serv-input').value || 0;
-
-  const returnAmt      = sale * (refund / 100);
-  const effectiveSale  = sale - returnAmt;
-  const procFeeAmt     = effectiveSale * (processingFeePct / 100);
-  const packaging      = ship + bottle + spoon + label + pnp;
-  const grossProfit    = effectiveSale - procFeeAmt - ingr - packaging;
-  const contribM      = grossProfit - cac;
-  const opexPerUnit   = opex / units;
-  const netProfit     = contribM - opexPerUnit;
-  const monthlyNet    = netProfit * units;
-  const productCost   = ingr + bottle + spoon + label;
-  const totalInvestment = (productCost + ship + pnp) * units + opex;
-
-  const notes = document.getElementById('entry-notes').value.trim();
-  return { name, sale, refund, processingFee: processingFeePct, cac, ingr, ship, bottle, spoon, label, pnp, units, opex, servingGrams, grossProfit, contribM, netProfit, monthlyNet, totalInvestment, notes };
+  return {
+    name,
+    notes:           document.getElementById('entry-notes').value.trim(),
+    oq:              +document.getElementById('oq-input').value || 100,
+    ingredients:     +document.getElementById('ingr-input').value || 0,
+    label:           +document.getElementById('label-input').value || 0,
+    bottle:          +document.getElementById('bottle').value || 0,
+    spoon:           +document.getElementById('spoon').value || 0,
+    tamperSeal:      +document.getElementById('tamper-input').value || 0,
+    inboundShipping: +document.getElementById('ship').value || 0,
+    pickpack:        +document.getElementById('pnp').value || 0,
+  };
 }
 
 async function saveEntry() {
@@ -1184,25 +1461,29 @@ function newEntry() {
 }
 
 function loadEntry(id) {
-  const e = currentEntries.find(x => x.id === id);
-  if (!e) return;
+  const raw = currentEntries.find(x => x.id === id);
+  if (!raw) return;
+  const e = normalizeEntry(raw);
 
-  document.getElementById('sale').value        = e.sale;
-  document.getElementById('refund').value      = e.refund;
-  document.getElementById('cac').value         = e.cac;
-  document.getElementById('ingr-input').value  = e.ingr;
-  document.getElementById('ship').value        = e.ship;
-  document.getElementById('bottle').value      = e.bottle;
-  document.getElementById('spoon').value       = e.spoon;
-  document.getElementById('label').value       = e.label;
-  document.getElementById('pnp').value         = e.pnp;
-  document.getElementById('oq').value          = e.units;
-  document.getElementById('opex').value        = e.opex;
-  document.getElementById('serv-input').value  = e.servingGrams || 0;
+  document.getElementById('ingr-input').value   = e.ingredients;
+  document.getElementById('ingr').value          = e.ingredients;
+  document.getElementById('label-input').value  = e.label;
+  document.getElementById('label-s').value       = e.label;
+  document.getElementById('bottle').value        = e.bottle;
+  document.getElementById('bottle-input').value  = e.bottle;
+  document.getElementById('spoon').value         = e.spoon;
+  document.getElementById('spoon-input').value   = e.spoon;
+  document.getElementById('tamper-input').value  = e.tamperSeal;
+  document.getElementById('tamper').value        = e.tamperSeal;
+  document.getElementById('ship').value          = e.inboundShipping;
+  document.getElementById('ship-input').value    = e.inboundShipping;
+  document.getElementById('pnp').value           = e.pickpack;
+  document.getElementById('pnp-input').value     = e.pickpack;
+  document.getElementById('oq-input').value      = e.oq;
+  document.getElementById('company-name').value  = e.name || '';
+  document.getElementById('entry-notes').value   = e.notes || '';
 
   activeEntryId = e.id;
-  document.getElementById('company-name').value = e.name;
-  document.getElementById('entry-notes').value = e.notes || '';
   document.getElementById('save-btn').textContent = 'Save changes';
   document.getElementById('save-btn').className = 'save-btn';
   document.getElementById('edit-banner-name').textContent = e.name;
@@ -1216,21 +1497,6 @@ function loadEntry(id) {
 async function deleteEntry(id) {
   if (activeEntryId === id) newEntry();
   await entriesCol.doc(id).delete();
-}
-
-function toggleProductCost(id) {
-  const el = document.getElementById('pc-' + id);
-  const arrow = document.getElementById('pca-' + id);
-  if (!el) return;
-  const show = el.style.display === 'none';
-  el.style.display = show ? 'block' : 'none';
-  arrow.textContent = show ? '▴' : '▾';
-}
-
-function toggleTotalInv(id) {
-  const el = document.getElementById('ti-' + id);
-  if (!el) return;
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
 function toggleView(mode) {
@@ -1259,107 +1525,51 @@ function toggleSelect(id) {
 function exportCSV() {
   if (!currentEntries.length) return;
 
+  const gs = globalSettings;
+  const esc = v => { const s = String(v); return (s.includes(',') || s.includes('"') || s.includes('\n')) ? `"${s.replace(/"/g, '""')}"` : s; };
+
+  const settingsHeader = [
+    '"Global Settings"',
+    ['"Sale Price"','"Refund Rate%"','"Processing Fee%"','"CAC"','"Monthly OpEx"','"Outbound Shipping"'].join(','),
+    [gs.sale, gs.refundRate, gs.procFeePct, gs.cac, gs.monthlyOpex, gs.outboundShipping].join(','),
+    '""',
+  ].join('\n');
+
   const headers = [
-    'Company Name',
-    'Saved Date',
-    'Notes',
-    // ── Inputs ──────────────────────────
-    'Sale Price ($)',
-    'Refund Rate (%)',
-    'CAC ($)',
-    'Ingredients PPU ($)',
-    'Bottle ($)',
-    'Serving Spoon ($)',
-    'Label ($)',
-    'Shipping ($)',
-    'Pick & Pack ($)',
-    'Order Qty (units)',
-    'Monthly Opex ($)',
-    'Serving Size (g)',
-    // ── Computed inputs ──────────────────
-    'Return Amount ($)',
-    'Effective Sale Price ($)',
-    'Product Cost PPU ($)',
-    'Packaging Cost PPU ($)',
-    'Total COGS PPU ($)',
-    'Opex Per Unit ($)',
-    'Max Ingredient Budget ($)',
-    // ── Outputs ──────────────────────────
-    'Gross Profit ($)',
-    'Gross Margin (%)',
-    'Contrib. Margin ($)',
-    'Contrib. Margin (%)',
-    'Net Profit Per Unit ($)',
-    'Net Margin (%)',
-    'Monthly Net Profit ($)',
-    'Total Investment ($)',
-    'Break-even Units Per Month',
-    'Cost Per Gram ($)',
+    'Name','OQ','Ingredients','Label','Bottle+Lid','Serving Spoon','Tamper Seal',
+    'Inbound Shipping','Pick & Pack','COGS/unit',
+    'Gross Profit','Gross Margin%','Contrib. Margin','Net Profit/Unit','Monthly Net'
   ];
 
   const rows = currentEntries.map(e => {
-    const refund        = e.refund || 0;
-    const ship          = e.ship  || 0;
-    const pnp           = e.pnp   || 0;
-    const servG         = e.servingGrams || 0;
-    const returnAmt     = e.sale * (refund / 100);
-    const effectiveSale = e.sale - returnAmt;
-    const productCost   = e.ingr + e.bottle + e.spoon + e.label;
-    const packaging     = ship + e.bottle + e.spoon + e.label + pnp;
-    const cogs          = e.ingr + ship + e.bottle + e.spoon + e.label + pnp;
-    const grossProfit   = effectiveSale - e.ingr - (ship + e.bottle + e.spoon + e.label + pnp);
-    const grossPct      = grossProfit / e.sale * 100;
-    const contribM      = grossProfit - e.cac;
-    const contribPct    = contribM / e.sale * 100;
-    const opexPerUnit   = e.opex / e.units;
-    const netProfit     = contribM - opexPerUnit;
-    const netPct        = netProfit / e.sale * 100;
-    const monthlyNet    = netProfit * e.units;
-    const totalInv      = (productCost + ship + pnp) * e.units + e.opex;
-    const breakeven     = contribM > 0 ? Math.ceil(e.opex / contribM) : '';
-    const maxIngr       = effectiveSale - e.cac - (ship + e.bottle + e.spoon + e.label + pnp) - opexPerUnit;
-    const costPerGram   = servG > 0 ? (cogs / servG) : '';
-    const savedAt       = e.savedAt ? new Date(e.savedAt.seconds * 1000).toLocaleDateString() : '';
-
+    const ne = normalizeEntry(e);
+    const v  = computeDisplayVals(ne, globalSettings);
+    const savedAt = e.savedAt ? new Date(e.savedAt.seconds * 1000).toLocaleDateString() : '';
     return [
-      e.name,
-      savedAt,
-      e.notes || '',
-      e.sale.toFixed(2),
-      refund.toFixed(1),
-      e.cac,
-      e.ingr.toFixed(2),
-      e.bottle.toFixed(2),
-      e.spoon.toFixed(2),
-      e.label.toFixed(2),
-      ship.toFixed(2),
-      pnp.toFixed(2),
-      e.units,
-      e.opex,
-      servG || '',
-      returnAmt.toFixed(2),
-      effectiveSale.toFixed(2),
-      productCost.toFixed(2),
-      packaging.toFixed(2),
-      cogs.toFixed(2),
-      opexPerUnit.toFixed(2),
-      maxIngr.toFixed(2),
-      grossProfit.toFixed(2),
-      grossPct.toFixed(2),
-      contribM.toFixed(2),
-      contribPct.toFixed(2),
-      netProfit.toFixed(2),
-      netPct.toFixed(2),
-      monthlyNet.toFixed(2),
-      totalInv.toFixed(2),
-      breakeven,
-      costPerGram !== '' ? costPerGram.toFixed(4) : '',
+      ne.name,
+      ne.oq,
+      ne.ingredients.toFixed(2),
+      ne.label.toFixed(2),
+      ne.bottle.toFixed(2),
+      ne.spoon.toFixed(2),
+      ne.tamperSeal.toFixed(2),
+      ne.inboundShipping.toFixed(2),
+      ne.pickpack.toFixed(2),
+      v.cogs.toFixed(2),
+      v.grossProfit.toFixed(2),
+      v.grossMarginPct.toFixed(2),
+      v.contribMargin.toFixed(2),
+      v.netProfit.toFixed(2),
+      v.monthlyNet.toFixed(2),
     ];
   });
 
-  const esc = v => { const s = String(v); return (s.includes(',') || s.includes('"') || s.includes('\n')) ? `"${s.replace(/"/g, '""')}"` : s; };
-  const csv = [headers, ...rows].map(r => r.map(esc).join(',')).join('\n');
-  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([csv], {type:'text/csv'})), download: `unit-economics-${new Date().toISOString().slice(0,10)}.csv` });
+  const dataBlock = [headers, ...rows].map(r => r.map(esc).join(',')).join('\n');
+  const csv = settingsHeader + '\n' + dataBlock;
+  const a = Object.assign(document.createElement('a'), {
+    href: URL.createObjectURL(new Blob([csv], {type:'text/csv'})),
+    download: `unit-economics-${new Date().toISOString().slice(0,10)}.csv`
+  });
   a.click();
 }
 
@@ -1387,48 +1597,28 @@ async function applyBulkEdit() {
   const val = parseFloat(raw);
   if (isNaN(val)) return;
 
+  // Map display field names to storage field names
+  const fieldMap = {
+    'ingredients': 'ingredients',
+    'label': 'label',
+    'bottle': 'bottle',
+    'spoon': 'spoon',
+    'tamperSeal': 'tamperSeal',
+    'inboundShipping': 'inboundShipping',
+    'pickpack': 'pickpack',
+    'oq': 'oq',
+  };
+  const storageField = fieldMap[field] || field;
+
   const ops = [...bulkSelected].map(id => {
     const e = currentEntries.find(x => x.id === id);
     if (!e) return null;
-    const u             = { ...e, [field]: val };
-    const returnAmt     = u.sale * ((u.refund || 0) / 100);
-    const effectiveSale = u.sale - returnAmt;
-    const fee           = u.processingFee != null ? u.processingFee : processingFeePct;
-    const procFeeAmt    = effectiveSale * (fee / 100);
-    const packaging     = (u.ship || 0) + u.bottle + u.spoon + u.label + (u.pnp || 0);
-    const grossProfit   = effectiveSale - procFeeAmt - u.ingr - packaging;
-    const contribM      = grossProfit - u.cac;
-    const opexPerUnit   = u.opex / u.units;
-    const netProfit     = contribM - opexPerUnit;
-    const monthlyNet    = netProfit * u.units;
-    const productCost   = u.ingr + u.bottle + u.spoon + u.label;
-    const totalInvestment = (productCost + (u.ship || 0) + (u.pnp || 0)) * u.units + u.opex;
-    return entriesCol.doc(id).update({ [field]: val, grossProfit, contribM, netProfit, monthlyNet, totalInvestment });
+    return entriesCol.doc(id).update({ [storageField]: val });
   }).filter(Boolean);
 
   await Promise.all(ops);
   bulkSelected.clear();
   renderDB(currentEntries);
-}
-
-function calcTotalInv(e) {
-  const pc = e.ingr + e.bottle + e.spoon + e.label;
-  return (pc + (e.ship || 0) + (e.pnp || 0)) * e.units + e.opex;
-}
-
-function computeDisplayVals(e) {
-  const returnAmt     = e.sale * ((e.refund || 0) / 100);
-  const effectiveSale = e.sale - returnAmt;
-  const fee           = e.processingFee != null ? e.processingFee : processingFeePct;
-  const procFeeAmt    = effectiveSale * (fee / 100);
-  const packaging     = (e.ship || 0) + e.bottle + e.spoon + e.label + (e.pnp || 0);
-  const grossProfit   = effectiveSale - procFeeAmt - e.ingr - packaging;
-  const contribM      = grossProfit - e.cac;
-  const opexPerUnit   = e.opex / e.units;
-  const netProfit     = contribM - opexPerUnit;
-  const monthlyNet    = netProfit * e.units;
-  const monthlyGross  = e.sale * e.units;
-  return { grossProfit, contribM, netProfit, monthlyNet, monthlyGross, procFeeAmt };
 }
 
 function renderDB(entries) {
@@ -1437,16 +1627,14 @@ function renderDB(entries) {
   section.style.display = 'block';
 
   const sortFields = [
-    { col: 'netProfit',       label: 'Net/unit' },
-    { col: 'monthlyNet',      label: 'Mo. net' },
-    { col: 'grossProfit',     label: 'Gross profit' },
-    { col: 'contribM',        label: 'Contrib.' },
-    { col: 'totalInvestment', label: 'Total inv.' },
-    { col: 'name',            label: 'Company' },
-    { col: 'sale',            label: 'Sale' },
-    { col: 'cac',             label: 'CAC' },
-    { col: 'units',           label: 'OQ' },
-    { col: 'opex',            label: 'Opex' },
+    { col: 'name',          label: 'Company' },
+    { col: 'oq',            label: 'OQ' },
+    { col: 'cogs',          label: 'COGS' },
+    { col: 'grossProfit',   label: 'Gross Profit' },
+    { col: 'grossMargin',   label: 'Gross Margin' },
+    { col: 'contribMargin', label: 'Contrib. Margin' },
+    { col: 'netProfit',     label: 'Net/unit' },
+    { col: 'monthlyNet',    label: 'Mo. Net' },
   ];
 
   const sortBar = `<div class="db-controls">
@@ -1467,19 +1655,14 @@ function renderDB(entries) {
     <span class="bulk-label">— set</span>
     <select class="bulk-select" id="bulk-field">
       <option value="">choose field…</option>
-      <option value="units">Order Qty / MOQ</option>
-      <option value="cac">CAC ($)</option>
-      <option value="opex">Monthly Opex ($)</option>
-      <option value="sale">Sale Price ($)</option>
-      <option value="refund">Refund Rate (%)</option>
-      <option value="processingFee">Processing Fee (%)</option>
-      <option value="ingr">Ingredients PPU ($)</option>
-      <option value="ship">Shipping ($)</option>
-      <option value="pnp">Pick &amp; Pack ($)</option>
-      <option value="bottle">Bottle ($)</option>
-      <option value="spoon">Serving Spoon ($)</option>
+      <option value="oq">Order Qty (OQ)</option>
+      <option value="ingredients">Ingredients ($)</option>
       <option value="label">Label ($)</option>
-      <option value="servingGrams">Serving Size (g)</option>
+      <option value="bottle">Bottle + Lid ($)</option>
+      <option value="spoon">Serving Spoon ($)</option>
+      <option value="tamperSeal">Tamper Seal ($)</option>
+      <option value="inboundShipping">Inbound Shipping ($)</option>
+      <option value="pickpack">Pick &amp; Pack ($)</option>
     </select>
     <span class="bulk-label">to</span>
     <input type="number" class="bulk-input" id="bulk-value" placeholder="new value" step="any">
@@ -1492,36 +1675,28 @@ function renderDB(entries) {
 
 function renderCardsView(sorted) {
   const cards = sorted.map(e => {
-    const productCost = e.ingr + e.bottle + e.spoon + e.label;
-    const totalInv    = calcTotalInv(e);
-    const servG       = e.servingGrams || 0;
-    const cogs        = e.ingr + (e.ship || 0) + e.bottle + e.spoon + e.label + (e.pnp || 0);
-    const costPerGram = servG > 0 ? cogs / servG : null;
-    const isActive    = e.id === activeEntryId;
-    const isSel       = selectedIds.includes(e.id);
-    const isBulk      = bulkSelected.has(e.id);
-    const { grossProfit, contribM, netProfit, monthlyNet } = computeDisplayVals(e);
+    const ne       = normalizeEntry(e);
+    const v        = computeDisplayVals(ne, globalSettings);
+    const isActive = e.id === activeEntryId;
+    const isSel    = selectedIds.includes(e.id);
+    const isBulk   = bulkSelected.has(e.id);
 
     const chips = [
-      `<span class="card-chip">Sale <b>$${e.sale.toFixed(2)}</b></span>`,
-      e.refund ? `<span class="card-chip">Refund <b>${e.refund.toFixed(1)}%</b></span>` : '',
-      `<span class="card-chip">CAC <b>$${e.cac}</b></span>`,
-      `<span class="card-chip">Ingr <b>${dv(e.ingr, n => '$' + n.toFixed(2))}</b></span>`,
-      `<span class="card-chip">Bottle <b>${dv(e.bottle, n => '$' + n.toFixed(2))}</b></span>`,
-      `<span class="card-chip">Spoon <b>${dv(e.spoon, n => '$' + n.toFixed(2))}</b></span>`,
-      `<span class="card-chip">Label <b>${dv(e.label, n => '$' + n.toFixed(2))}</b></span>`,
-      `<span class="card-chip">Ship <b>${dv(e.ship, n => '$' + n.toFixed(2))}</b></span>`,
-      e.pnp ? `<span class="card-chip">P&amp;P <b>$${e.pnp.toFixed(2)}</b></span>` : '',
-      `<span class="card-chip">OQ <b>${e.units.toLocaleString()}</b></span>`,
-      `<span class="card-chip">Opex <b>$${e.opex.toLocaleString()}/mo</b></span>`,
-      servG > 0 ? `<span class="card-chip">Serving <b>${servG}g${costPerGram !== null ? ' · $' + costPerGram.toFixed(3) + '/g' : ''}</b></span>` : '',
+      ne.ingredients   ? `<span class="card-chip">Ingr <b>${fmt(ne.ingredients)}</b></span>` : '',
+      ne.label         ? `<span class="card-chip">Label <b>${fmt(ne.label)}</b></span>` : '',
+      ne.bottle        ? `<span class="card-chip">Bottle <b>${fmt(ne.bottle)}</b></span>` : '',
+      ne.spoon         ? `<span class="card-chip">Spoon <b>${fmt(ne.spoon)}</b></span>` : '',
+      ne.tamperSeal    ? `<span class="card-chip">Tamper <b>${fmt(ne.tamperSeal)}</b></span>` : '',
+      ne.inboundShipping ? `<span class="card-chip">Inbound <b>${fmt(ne.inboundShipping)}</b></span>` : '',
+      ne.pickpack      ? `<span class="card-chip">P&amp;P <b>${fmt(ne.pickpack)}</b></span>` : '',
+      `<span class="card-chip">OQ <b>${ne.oq.toLocaleString()}</b></span>`,
     ].filter(Boolean).join('');
 
     return `<div class="entry-card${isActive ? ' active-card' : ''}${isSel ? ' comparing' : ''}">
       <div class="card-header">
         <div>
-          <div class="card-name">${e.name}</div>
-          ${e.notes ? `<div class="card-note">${e.notes.slice(0, 90)}${e.notes.length > 90 ? '…' : ''}</div>` : ''}
+          <div class="card-name">${ne.name || '—'}</div>
+          ${ne.notes ? `<div class="card-note">${ne.notes.slice(0, 90)}${ne.notes.length > 90 ? '…' : ''}</div>` : ''}
         </div>
         <div class="card-actions">
           <input type="checkbox" class="bulk-chk" ${isBulk ? 'checked' : ''} onchange="toggleBulkSelect('${e.id}')">
@@ -1531,17 +1706,10 @@ function renderCardsView(sorted) {
         </div>
       </div>
       <div class="card-outputs">
-        <div class="card-kpi"><div class="card-kpi-label">Gross profit</div><div class="card-kpi-val ${cc(grossProfit)}">${fmt(grossProfit)}</div></div>
-        <div class="card-kpi"><div class="card-kpi-label">Contrib. margin</div><div class="card-kpi-val ${cc(contribM)}">${fmt(contribM)}</div></div>
-        <div class="card-kpi"><div class="card-kpi-label">Net / unit</div><div class="card-kpi-val ${cc(netProfit)}">${fmt(netProfit)}</div></div>
-        <div class="card-kpi"><div class="card-kpi-label">Monthly net</div><div class="card-kpi-val ${cc(monthlyNet)}">${fmtK(monthlyNet)}</div></div>
-        <div class="card-kpi clickable" onclick="toggleTotalInv('${e.id}')">
-          <div class="card-kpi-label">Total inv. ▾</div>
-          <div class="card-kpi-val a">${fmtK(totalInv)}</div>
-          <div id="ti-${e.id}" class="pc-breakdown" style="display:none">
-            ${fmt(productCost)} prod<br>+ ${dv(e.ship, n => '$' + n.toFixed(2))} ship<br>+ ${dv(e.pnp, n => '$' + n.toFixed(2))} P&amp;P<br>× ${e.units.toLocaleString()}<br>+ $${e.opex.toLocaleString()} opex
-          </div>
-        </div>
+        <div class="card-kpi"><div class="card-kpi-label">Gross Profit</div><div class="card-kpi-val ${cc(v.grossProfit)}">${fmt(v.grossProfit)}</div></div>
+        <div class="card-kpi"><div class="card-kpi-label">Gross Margin</div><div class="card-kpi-val ${cc(v.grossProfit)}">${v.grossMarginPct.toFixed(1)}%</div></div>
+        <div class="card-kpi"><div class="card-kpi-label">Contrib. Margin</div><div class="card-kpi-val ${cc(v.contribMargin)}">${fmt(v.contribMargin)}</div></div>
+        <div class="card-kpi"><div class="card-kpi-label">Net / Unit</div><div class="card-kpi-val ${cc(v.netProfit)}">${fmt(v.netProfit)}</div></div>
       </div>
       <div class="card-inputs">${chips}</div>
     </div>`;
@@ -1550,47 +1718,37 @@ function renderCardsView(sorted) {
 }
 
 function renderTableView(sorted) {
-  const COLS = 9;
+  const COLS = 10;
   const rows = sorted.map(e => {
-    const productCost = e.ingr + e.bottle + e.spoon + e.label;
-    const totalInv    = calcTotalInv(e);
-    const servG       = e.servingGrams || 0;
-    const cogs        = e.ingr + (e.ship || 0) + e.bottle + e.spoon + e.label + (e.pnp || 0);
-    const costPerGram = servG > 0 ? cogs / servG : null;
-    const isActive    = e.id === activeEntryId;
-    const isSel       = selectedIds.includes(e.id);
-    const isExp       = expandedId === e.id;
-    const isBulk      = bulkSelected.has(e.id);
-    const { grossProfit, contribM, netProfit, monthlyNet, monthlyGross, procFeeAmt } = computeDisplayVals(e);
-
-    const keyInputs = `$${e.sale.toFixed(2)} · CAC $${e.cac} · OQ ${e.units.toLocaleString()} · Opex $${e.opex >= 1000 ? (e.opex/1000).toFixed(0)+'K' : e.opex}`;
+    const ne      = normalizeEntry(e);
+    const v       = computeDisplayVals(ne, globalSettings);
+    const isActive= e.id === activeEntryId;
+    const isSel   = selectedIds.includes(e.id);
+    const isExp   = expandedId === e.id;
+    const isBulk  = bulkSelected.has(e.id);
 
     const detail = isExp ? `<tr class="expand-row"><td colspan="${COLS}"><div class="expand-panel">
-      <div class="expand-section-label">Outputs</div>
+      <div class="expand-section-label">Outputs (using global settings)</div>
       <div class="expand-grid">
-        <div><div class="expand-label">Gross profit</div><div class="expand-val ${cc(grossProfit)}">${fmt(grossProfit)}</div></div>
-        <div><div class="expand-label">Contrib. margin</div><div class="expand-val ${cc(contribM)}">${fmt(contribM)}</div></div>
-        <div><div class="expand-label">Net / unit</div><div class="expand-val ${cc(netProfit)}">${fmt(netProfit)}</div></div>
-        <div><div class="expand-label">Monthly net</div><div class="expand-val ${cc(monthlyNet)}">${fmtK(monthlyNet)}</div></div>
-        ${procFeeAmt > 0 ? `<div><div class="expand-label">Processing fee</div><div class="expand-val r">${fmt(-procFeeAmt)}</div></div>` : ''}
-        <div><div class="expand-label">Total inv.</div><div class="expand-val a">${fmtK(totalInv)}</div><div style="font-size:10px;color:var(--faint);margin-top:2px;white-space:normal">${fmt(productCost)} prod + ${dv(e.ship,n=>'$'+n.toFixed(2))} ship + ${dv(e.pnp,n=>'$'+n.toFixed(2))} P&amp;P × ${e.units.toLocaleString()} + $${e.opex.toLocaleString()} opex</div></div>
+        <div><div class="expand-label">Gross Profit</div><div class="expand-val ${cc(v.grossProfit)}">${fmt(v.grossProfit)}</div></div>
+        <div><div class="expand-label">Gross Margin</div><div class="expand-val ${cc(v.grossProfit)}">${v.grossMarginPct.toFixed(1)}%</div></div>
+        <div><div class="expand-label">Contrib. Margin</div><div class="expand-val ${cc(v.contribMargin)}">${fmt(v.contribMargin)}</div></div>
+        <div><div class="expand-label">Net / Unit</div><div class="expand-val ${cc(v.netProfit)}">${fmt(v.netProfit)}</div></div>
+        <div><div class="expand-label">Monthly Net</div><div class="expand-val ${cc(v.monthlyNet)}">${fmtK(v.monthlyNet)}</div></div>
+        <div><div class="expand-label">Break-even</div><div class="expand-val">${v.breakeven ? v.breakeven.toLocaleString() + ' u/mo' : 'N/A'}</div></div>
       </div>
-      <div class="expand-section-label">Inputs</div>
+      <div class="expand-section-label">COGS Inputs</div>
       <div class="expand-grid">
-        <div><div class="expand-label">Sale price</div><div class="expand-val">$${e.sale.toFixed(2)}</div></div>
-        ${e.refund ? `<div><div class="expand-label">Refund rate</div><div class="expand-val">${e.refund.toFixed(1)}%</div></div>` : ''}
-        <div><div class="expand-label">CAC</div><div class="expand-val">$${e.cac}</div></div>
-        <div><div class="expand-label">Ingredients</div><div class="expand-val">${dv(e.ingr, n=>'$'+n.toFixed(2))}</div></div>
-        <div><div class="expand-label">Bottle</div><div class="expand-val">${dv(e.bottle, n=>'$'+n.toFixed(2))}</div></div>
-        <div><div class="expand-label">Spoon</div><div class="expand-val">${dv(e.spoon, n=>'$'+n.toFixed(2))}</div></div>
-        <div><div class="expand-label">Label</div><div class="expand-val">${dv(e.label, n=>'$'+n.toFixed(2))}</div></div>
-        <div><div class="expand-label">Shipping</div><div class="expand-val">${dv(e.ship, n=>'$'+n.toFixed(2))}</div></div>
-        ${e.pnp ? `<div><div class="expand-label">Pick &amp; pack</div><div class="expand-val">$${e.pnp.toFixed(2)}</div></div>` : ''}
-        <div><div class="expand-label">Order qty</div><div class="expand-val">${e.units.toLocaleString()}</div></div>
-        <div><div class="expand-label">Opex/mo</div><div class="expand-val">$${e.opex.toLocaleString()}</div></div>
-        ${servG > 0 ? `<div><div class="expand-label">Serving size</div><div class="expand-val">${servG}g${costPerGram !== null ? ' · $'+costPerGram.toFixed(3)+'/g' : ''}</div></div>` : ''}
+        <div><div class="expand-label">Ingredients</div><div class="expand-val">${fmt(ne.ingredients)}</div></div>
+        <div><div class="expand-label">Label</div><div class="expand-val">${fmt(ne.label)}</div></div>
+        <div><div class="expand-label">Bottle + Lid</div><div class="expand-val">${fmt(ne.bottle)}</div></div>
+        <div><div class="expand-label">Serving Spoon</div><div class="expand-val">${fmt(ne.spoon)}</div></div>
+        <div><div class="expand-label">Tamper Seal</div><div class="expand-val">${fmt(ne.tamperSeal)}</div></div>
+        <div><div class="expand-label">Inbound Ship</div><div class="expand-val">${fmt(ne.inboundShipping)}</div></div>
+        <div><div class="expand-label">Pick &amp; Pack</div><div class="expand-val">${fmt(ne.pickpack)}</div></div>
+        <div><div class="expand-label">OQ</div><div class="expand-val">${ne.oq.toLocaleString()}</div></div>
       </div>
-      ${e.notes ? `<div class="expand-section-label" style="margin-top:0.5rem">Notes</div><div class="expand-notes">${e.notes}</div>` : ''}
+      ${ne.notes ? `<div class="expand-section-label" style="margin-top:0.5rem">Notes</div><div class="expand-notes">${ne.notes}</div>` : ''}
     </div></td></tr>` : '';
 
     return `<tr class="cv-data${isActive ? ' cv-active' : ''}${isExp ? ' cv-expanded' : ''}" onclick="toggleExpand('${e.id}')">
@@ -1600,13 +1758,14 @@ function renderTableView(sorted) {
           <button class="cmp-btn${isSel ? ' selected' : ''}" onclick="toggleSelect('${e.id}')">${isSel ? '✓' : '+'}</button>
         </div>
       </td>
-      <td class="cv-name">${e.name}</td>
-      <td>${fmt(productCost)}</td>
-      <td style="color:var(--green);font-size:13px;font-weight:600">${fmtK(monthlyNet)}</td>
-      <td>${fmtK(monthlyGross)}</td>
-      <td class="${cc(contribM)}">${fmt(contribM)}</td>
-      <td style="color:var(--amber);font-weight:600">${fmtK(totalInv)}</td>
-      <td style="color:var(--faint);font-size:11px">${keyInputs}</td>
+      <td class="cv-name">${ne.name || '—'}</td>
+      <td>${ne.oq.toLocaleString()}</td>
+      <td>${fmt(v.cogs)}</td>
+      <td class="${cc(v.grossProfit)}">${fmt(v.grossProfit)}</td>
+      <td class="${cc(v.grossProfit)}">${v.grossMarginPct.toFixed(1)}%</td>
+      <td class="${cc(v.contribMargin)}">${fmt(v.contribMargin)}</td>
+      <td class="${cc(v.netProfit)}">${fmt(v.netProfit)}</td>
+      <td style="color:var(--green);font-size:13px;font-weight:600">${fmtK(v.monthlyNet)}</td>
       <td>
         <div style="display:flex;gap:6px;align-items:center" onclick="event.stopPropagation()">
           <button class="load-btn" onclick="event.stopPropagation();loadEntry('${e.id}')">Load</button>
@@ -1619,14 +1778,15 @@ function renderTableView(sorted) {
 
   return `<div class="cv-wrap"><table class="cv-table">
     <thead><tr>
-      <th style="width:60px"><input type="checkbox" class="bulk-chk" title="Select all" onchange="selectAllBulk(this.checked)" ${bulkSelected.size === currentEntries.length && currentEntries.length > 0 ? 'checked' : ''}></th>
-      <th>Company</th>
-      <th>Prod cost/unit</th>
-      <th>Mo. net profit</th>
-      <th>Mo. gross revenue</th>
-      <th>Contrib.</th>
-      <th>Total inv.</th>
-      <th>Key inputs</th>
+      <th style="width:70px"><input type="checkbox" class="bulk-chk" title="Select all" onchange="selectAllBulk(this.checked)" ${bulkSelected.size === currentEntries.length && currentEntries.length > 0 ? 'checked' : ''}></th>
+      <th>Name</th>
+      <th>OQ</th>
+      <th>COGS/unit</th>
+      <th>Gross Profit</th>
+      <th>Gross Margin%</th>
+      <th>Contrib. Margin</th>
+      <th>Net/unit</th>
+      <th>Mo. Net</th>
       <th></th>
     </tr></thead>
     <tbody>${rows}</tbody>
@@ -1650,21 +1810,20 @@ function renderCompare() {
   }
 
   const metrics = [
-    { section: 'outputs', label: 'Net / unit',      val: e => computeDisplayVals(e).netProfit,   display: fmt,  hi: true },
-    { section: 'outputs', label: 'Monthly net',     val: e => computeDisplayVals(e).monthlyNet,  display: fmtK, hi: true },
-    { section: 'outputs', label: 'Gross profit',    val: e => computeDisplayVals(e).grossProfit, display: fmt,  hi: true },
-    { section: 'outputs', label: 'Contrib. margin', val: e => computeDisplayVals(e).contribM,    display: fmt,  hi: true },
-    { section: 'outputs', label: 'Total inv.',      val: e => calcTotalInv(e),                                    display: fmtK,                         hi: false },
-    { section: 'inputs',  label: 'Sale price',      val: e => e.sale,                                             display: n => '$' + n.toFixed(2),      hi: null },
-    { section: 'inputs',  label: 'Refund rate',     val: e => e.refund,                                           display: n => n.toFixed(1) + '%',      hi: null },
-    { section: 'inputs',  label: 'CAC',             val: e => e.cac,                                              display: n => '$' + n,                 hi: null },
-    { section: 'inputs',  label: 'Ingredients',     val: e => e.ingr,                                             display: n => '$' + n.toFixed(2),      hi: null },
-    { section: 'inputs',  label: 'Product cost',    val: e => e.ingr + e.bottle + e.spoon + e.label,              display: n => '$' + n.toFixed(2),      hi: null },
-    { section: 'inputs',  label: 'Shipping',        val: e => e.ship,                                             display: n => '$' + n.toFixed(2),      hi: null },
-    { section: 'inputs',  label: 'P&P',             val: e => e.pnp,                                              display: n => n ? '$' + n.toFixed(2) : '—', hi: null },
-    { section: 'inputs',  label: 'Order qty',       val: e => e.units,                                            display: n => n.toLocaleString(),      hi: null },
-    { section: 'inputs',  label: 'Opex/mo',         val: e => e.opex,                                             display: fmtK,                         hi: null },
-    { section: 'inputs',  label: 'Serving size',    val: e => e.servingGrams || 0,                                display: n => n ? n + 'g' : '—',       hi: null },
+    { section: 'outputs', label: 'Net / unit',        val: e => computeDisplayVals(normalizeEntry(e), globalSettings).netProfit,    display: fmt,  hi: true },
+    { section: 'outputs', label: 'Monthly net',       val: e => computeDisplayVals(normalizeEntry(e), globalSettings).monthlyNet,   display: fmtK, hi: true },
+    { section: 'outputs', label: 'Gross profit',      val: e => computeDisplayVals(normalizeEntry(e), globalSettings).grossProfit,  display: fmt,  hi: true },
+    { section: 'outputs', label: 'Gross margin %',    val: e => computeDisplayVals(normalizeEntry(e), globalSettings).grossMarginPct, display: n => n.toFixed(1)+'%', hi: true },
+    { section: 'outputs', label: 'Contrib. margin',   val: e => computeDisplayVals(normalizeEntry(e), globalSettings).contribMargin, display: fmt, hi: true },
+    { section: 'inputs',  label: 'OQ',                val: e => normalizeEntry(e).oq,                display: n => n.toLocaleString(), hi: null },
+    { section: 'inputs',  label: 'COGS / unit',       val: e => computeDisplayVals(normalizeEntry(e), globalSettings).cogs,         display: fmt,  hi: null },
+    { section: 'inputs',  label: 'Ingredients',       val: e => normalizeEntry(e).ingredients,       display: fmt,  hi: null },
+    { section: 'inputs',  label: 'Label',             val: e => normalizeEntry(e).label,             display: fmt,  hi: null },
+    { section: 'inputs',  label: 'Bottle + Lid',      val: e => normalizeEntry(e).bottle,            display: fmt,  hi: null },
+    { section: 'inputs',  label: 'Serving Spoon',     val: e => normalizeEntry(e).spoon,             display: fmt,  hi: null },
+    { section: 'inputs',  label: 'Tamper Seal',       val: e => normalizeEntry(e).tamperSeal,        display: fmt,  hi: null },
+    { section: 'inputs',  label: 'Inbound Shipping',  val: e => normalizeEntry(e).inboundShipping,   display: fmt,  hi: null },
+    { section: 'inputs',  label: 'Pick & Pack',       val: e => normalizeEntry(e).pickpack,          display: fmt,  hi: null },
   ];
 
   let lastSec = null;
@@ -1680,7 +1839,7 @@ function renderCompare() {
     return `${groupRow}<tr><td class="cmp-row-label">${m.label}</td>${cells}</tr>`;
   }).join('');
 
-  const headers = selected.map(e => `<th>${e.name}</th>`).join('');
+  const headers = selected.map(e => `<th>${e.name || '—'}</th>`).join('');
 
   section.innerHTML = `<div class="panel-title" style="margin-bottom:1.25rem">Comparison</div>
     <div class="cmp-wrap"><table class="cmp-table">
@@ -1696,6 +1855,12 @@ document.getElementById('db-section').addEventListener('click', function(e) {
   if (btn.dataset.action === 'load') loadEntry(id);
   else if (btn.dataset.action === 'delete') deleteEntry(id);
 });
+
+// ── Page load ─────────────────────────────────────────────────────────────
+window.onload = () => {
+  loadGlobalSettings();
+  update();
+};
 </script>
 </body>
 </html>
